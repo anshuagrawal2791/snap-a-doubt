@@ -1,0 +1,29 @@
+{
+  "name": "snap-a-doubt",
+  "version": "1.0.0",
+  "description": "Backend for snap-a-doubt app",
+  "main": "server.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://anshuagrawal2791mydhees@bitbucket.org/anshuagrawal2791mydhees/snap-a-doubt.git"
+  },
+  "author": "Anshuman Agrawal",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/anshuagrawal2791mydhees/snap-a-doubt#readme",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "crypto": "^1.0.1",
+    "csprng": "^0.1.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.1.0",
+    "mongoose": "^4.13.9",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.1",
+    "passport-local": "^1.0.0"
+  }
+}
