@@ -1,4 +1,4 @@
-'use strict';
+
 
 var path = process.cwd();
 var userHandler = require('../handlers/userHandler');
