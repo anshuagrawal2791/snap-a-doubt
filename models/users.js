@@ -28,6 +28,9 @@ var User = new Schema({
         type: Date,
         default: Date.now
     },
+    referral_code:String,
+    points:{type:Number, default:0},
+    gcm_token:{type:String,required:true},
     modified_at: Date,
     image: { type: String, default: 'http://static.bleacherreport.net/images/redesign/avatars/default-user-icon-profile.png' }, // TODO update this
     doubts: { type: [String] },   // store the ids of questions
@@ -48,6 +51,7 @@ User.pre('save', function (next) {
     var hashed_password = crypto.createHash('sha512').update(newpass).digest("hex");
     user.salt = temp;
     user.password = hashed_password;
+    user.referral_code= rand(24,24);
     next();
 });
 
@@ -72,7 +76,8 @@ User.methods.toAuthJSON = function () {
         email: this.email,
         token: this.generateJWT(),
         image: this.image,
-        name: this.name
+        name: this.name,
+        referral_code : this.referral_code
     }
 };
 

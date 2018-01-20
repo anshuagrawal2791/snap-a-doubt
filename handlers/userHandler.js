@@ -1,8 +1,12 @@
 
 var Users = require('../models/users');
-
+var config = require('../config');
+var jwt = require('jsonwebtoken');
 module.exports={
+        
     addUser:(req,res)=>{
+
+        var points= (req.body.referral_code)?config.app.referralReward2:0; // TODO update user value
         var newUser = new Users({
             phone_number:req.body.phone_number,
             email:req.body.email,
@@ -15,6 +19,8 @@ module.exports={
             alternate_phone_number:req.body.alternate_phone_number,
             pin_code:req.body.pin_code,
             address:req.body.address,
+            points:points,
+            gcm_token:req.body.gcm_token
 
         });
 
@@ -23,8 +29,22 @@ module.exports={
             return res.status('400').send(err.errmsg);
             Users.findOne({email:newUser.email},(err,user)=>{
                 res.send(newUser.toAuthJSON());
-            })
+            });
             
         })
+    },
+    toAuthJSON:(user)=>{
+        return {
+            email: user.email,
+            token: user.generateJWT(user),
+            image: user.image,
+            name: user.name,
+            referral_code : user.referral_code
+        }
+    
+    },
+    generateJWT:(user)=>{
+        const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_KEY);
+        return token;
     }
 }
