@@ -16,8 +16,7 @@ module.exports.mail = (recipient, data, cb) => {
     }else{
         transporter = mailer.createTransport({
             host: 'smtp.mailtrap.io',
-            port: 465,
-            secure: true,
+            port: 2525,
             auth: {
                 user: "69271bffcbc1a9",
                 pass: "754e9bb7253a62"
