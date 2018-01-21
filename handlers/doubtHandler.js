@@ -82,6 +82,7 @@ findAndSendToTutor = (doubt, cb) => {
       });
     } else {
       Tutors.findOne({level: 0}, (err, tutor2) => {
+        console.log(tutor2);
         mailer.mail(tutor2.email, doubt, (err, resp) => {
           if (err) { return cb(err); }
           tutor2.received_today+=1;
