@@ -44,18 +44,6 @@ module.exports = {
         }
 
     },
-    saveUserToDb: (req, res, newUser) => {
-        newUser.save((err) => {
-            if (err)
-                return res.status('400').send(err.errmsg);
-            Users.findOne({ email: newUser.email }, (err, user) => {
-                if (err)
-                    res.status('400').send(err.errmsg);
-                res.send(newUser.toAuthJSON());
-            });
-
-        });
-    },
     toAuthJSON: (user) => {
         return {
             email: user.email,
@@ -71,4 +59,16 @@ module.exports = {
         const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_KEY);
         return token;
     }
+}
+saveUserToDb = (req, res, newUser) => {
+    newUser.save((err) => {
+        if (err)
+            return res.status('400').send(err.errmsg);
+        Users.findOne({ email: newUser.email }, (err, user) => {
+            if (err)
+                res.status('400').send(err.errmsg);
+            res.send(newUser.toAuthJSON());
+        });
+
+    });
 }
