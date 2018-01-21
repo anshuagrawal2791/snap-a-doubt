@@ -19,7 +19,7 @@ module.exports = {
             alternate_phone_number: req.body.alternate_phone_number,
             pin_code: req.body.pin_code,
             address: req.body.address,
-            points: points,
+            points: 0,
             gcm_token: req.body.gcm_token
 
         });
