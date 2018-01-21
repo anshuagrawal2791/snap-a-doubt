@@ -2,8 +2,10 @@
 
 var Doubts = require('../models/doubts');
 var Users = require('../models/users');
+var Tutors = require('../models/tutors');
 const multer = require('multer');
 const uploadToS3 = require('../utils/uploadToS3');
+const mailer = require('../utils/mailer');
 const fs = require('fs');
 const path = require('path');
 var Path = path.join(__dirname, '../uploads');
@@ -14,24 +16,16 @@ const deleteFolderRecursive = require('../utils/deleteDirectoryContent');
 
 module.exports = {
   addDoubt: (req, res) => {
-    console.log('inside addDoubt ');
     var doubtId = shortid.generate();
     var fileId = doubtId + '-com-' + shortid.generate();
-    // console.log('----------');
-    // console.log(req.body);
-    // console.log(req.files);
     if (req.files) {
-      console.log('image uploaded with doubt');
       uploadToS3.upload(req.files[0], fileId, (err, message) => {
         if (err) {
           return res.status('400').send(err);
         }
-        console.log('uploaded to s3 ' + JSON.stringify(message));
-
         saveDoubtToDb(req, res, doubtId, fileId);
       });
       deleteFolderRecursive.delete(Path, (found) => {
-        console.log(found);
       });
     } else {
       saveDoubtToDb(req, res, doubtId, null);
@@ -56,9 +50,46 @@ saveDoubtToDb = (req, res, doubtId, fileId) => {
         if (err) { return res.status('400').send(err.errmsg); }
 
         /// TODO send email to tutor
+        findAndSendToTutor(newDoubt,(err,tutor)=>{
+            if(err)
+            { return res.status('400').send(err); }
+            res.json({ 'doubt': newDoubt, 'tutor': tutor});
+        });
 
-        res.json({ 'doubt': newDoubt, 'user': req.user });
+        
       }
     );
   });
 };
+findAndSendToTutor = (doubt,cb)=>{
+    Tutors.findOne({
+        subject:doubt.subject,
+        classes:doubt.class,
+        solved_today:{$lt:configs.app.dailySolutionLimit},
+        level:{$gt:0},
+        available:true  
+    }).sort('level').exec((err,tutor)=>{
+        if(err){
+            return cb(err,null);
+        }
+        if(tutor){
+            console.log(tutor);
+            mailer.mail(tutor.email,doubt,(err,resp)=>{
+                if(err)
+                return cb(err);
+                cb(null,resp)
+                // cb(null,tutor);
+            })
+            
+        }else{
+            Tutors.findOne({level:0},(err,tutor2)=>{
+                mailer.mail(tutor2.email,doubt,(err,resp)=>{
+                    if(err)
+                    return cb(err);
+                    cb(null,resp)
+                    // cb(null,tutor2);
+                })
+            })
+        }
+    });
+}
