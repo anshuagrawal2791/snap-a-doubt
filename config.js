@@ -12,7 +12,7 @@ const dev = {
   aws: {
     bucket: process.env.AWS_BUCKET_DEV || 'dev',
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'AKIAJJM5U5RKUV2DFFHQ',
-    secretAccessKey: process.env.AWS_SECRET_KEY || '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',
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'felKzFUca+QX6/qqwk5xG0X3xzAMOKfoOE4ta0oA',
     region: process.env.AWS_REGION || 'us-west-2',
     bucketBaseUri:process.env.AWS_BUCKET_URL+process.env.AWS_BUCKET_DEV+'/'
   }
@@ -31,7 +31,7 @@ const test = {
   aws: {
     bucket: process.env.AWS_BUCKET_TEST || 'test',
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'AKIAJJM5U5RKUV2DFFHQ',
-    secretAccessKey: process.env.AWS_SECRET_KEY || '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',
+    secretAccessKey:  process.env.AWS_SECRET_ACCESS_KEY || 'felKzFUca+QX6/qqwk5xG0X3xzAMOKfoOE4ta0oA',
     region: process.env.AWS_REGION || 'us-west-2',
     bucketBaseUri:process.env.AWS_BUCKET_URL+process.env.AWS_BUCKET_TEST+'/'
 

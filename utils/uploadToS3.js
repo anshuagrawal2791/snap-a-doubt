@@ -10,12 +10,11 @@ var config = require('../config');
 
 
 if (process.env.NODE_ENV !== 'dev') {
-    AWS.config.loadFromPath(path.join(__dirname, '../aws-config.json'));
+    // AWS.config.loadFromPath(path.join(__dirname, '../aws-config.json'));
     AWS.config.update({
         httpOptions: { agent: proxy('http://172.16.2.30:8080') }
     });
 }
-AWS.config.loadFromPath(path.join(__dirname, '../aws-config.json'));
 module.exports.upload = (file, fileName, callback) => {
     var s3 = new AWS.S3();
     fs.readFile(file.path, (err, data) => {
@@ -36,6 +35,8 @@ module.exports.upload = (file, fileName, callback) => {
                     callback(null, data);
                 }
             });
+
+
         }
     })
 }
