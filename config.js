@@ -8,7 +8,8 @@ const dev = {
     adminKey:process.env.ADMIN_KEY,
     dailySolutionLimit:3,
     emailId:process.env.EMAIL_ID_DEV,
-    emailPassword:process.env.EMAIL_PASSWORD_DEV
+    emailPassword:process.env.EMAIL_PASSWORD_DEV,
+    subjects:['ENG',"SST","SCI","MAT","PHY","BIO","CHE"]
   },
   db: {
     uri: process.env.DEV_DB_HOST || 'mongodb://localhost:27017/snap-a-doubt'
@@ -30,7 +31,9 @@ const test = {
     adminKey:'anshuman',
     dailySolutionLimit:3,
     emailId:process.env.EMAIL_ID_TEST,
-    emailPassword:process.env.EMAIL_PASSWORD_TEST
+    emailPassword:process.env.EMAIL_PASSWORD_TEST,
+    subjects:['ENG',"SST","SCI","MAT","PHY","BIO","CHE"]
+
   },
   db: {
     uri: process.env.TEST_DB_HOST || 'mongodb://localhost:27017/snap-a-doubt'

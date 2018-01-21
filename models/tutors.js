@@ -27,7 +27,7 @@ var Tutor = new Schema({
     default: Date.now
   },
   modified_at:Date,
-  subject:String,
+  subject:{type:String,enum:configs.app.subjects},
   available:{type:Boolean,default:true}
 });
 
