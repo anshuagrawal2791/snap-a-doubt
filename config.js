@@ -5,11 +5,11 @@ const dev = {
     port: parseInt(process.env.DEV_APP_PORT) || process.env.PORT,
     referralReward1: 5,
     referralReward2: 2,
-    adminKey:process.env.ADMIN_KEY,
-    dailySolutionLimit:3,
-    emailId:process.env.EMAIL_ID_DEV,
-    emailPassword:process.env.EMAIL_PASSWORD_DEV,
-    subjects:['ENG',"SST","SCI","MAT","PHY","BIO","CHE"]
+    adminKey: process.env.ADMIN_KEY,
+    dailySolutionLimit: 3,
+    emailId: process.env.EMAIL_ID_DEV,
+    emailPassword: process.env.EMAIL_PASSWORD_DEV,
+    subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE']
   },
   db: {
     uri: process.env.DEV_DB_HOST || 'mongodb://localhost:27017/snap-a-doubt'
@@ -19,7 +19,7 @@ const dev = {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'AKIAJJM5U5RKUV2DFFHQ',
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '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',
     region: process.env.AWS_REGION || 'us-west-2',
-    bucketBaseUri:process.env.AWS_BUCKET_URL+process.env.AWS_BUCKET_DEV+'/'
+    bucketBaseUri: process.env.AWS_BUCKET_URL + process.env.AWS_BUCKET_DEV + '/'
   }
 };
 
@@ -28,11 +28,11 @@ const test = {
     port: parseInt(process.env.TEST_APP_PORT) || 8081,
     referralReward1: 5,
     referralReward2: 2,
-    adminKey:'anshuman',
-    dailySolutionLimit:3,
-    emailId:process.env.EMAIL_ID_TEST,
-    emailPassword:process.env.EMAIL_PASSWORD_TEST,
-    subjects:['ENG',"SST","SCI","MAT","PHY","BIO","CHE"]
+    adminKey: 'anshuman',
+    dailySolutionLimit: 3,
+    emailId: process.env.EMAIL_ID_TEST,
+    emailPassword: process.env.EMAIL_PASSWORD_TEST,
+    subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE']
 
   },
   db: {
@@ -42,10 +42,9 @@ const test = {
   aws: {
     bucket: process.env.AWS_BUCKET_TEST || 'test',
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'AKIAJJM5U5RKUV2DFFHQ',
-    secretAccessKey:  process.env.AWS_SECRET_ACCESS_KEY || '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',
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'felKzFUca+QX6/qqwk5xG0X3xzAMOKfoOE4ta0oA',
     region: process.env.AWS_REGION || 'us-west-2',
-    bucketBaseUri:process.env.AWS_BUCKET_URL+process.env.AWS_BUCKET_TEST+'/'
-
+    bucketBaseUri: process.env.AWS_BUCKET_URL + process.env.AWS_BUCKET_TEST + '/'
 
   }
 };

@@ -58,6 +58,6 @@ module.exports = {
 saveUserToDb = (req, res, newUser) => {
   newUser.save((err) => {
     if (err) { return res.status('400').send(err.errmsg); }
-      res.send(newUser.toAuthJSON());
+    res.send(newUser.toAuthJSON());
   });
 };

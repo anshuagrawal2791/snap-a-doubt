@@ -1,12 +1,9 @@
 
-
 var Doubts = require('../models/doubts');
 var Users = require('../models/users');
 var Tutors = require('../models/tutors');
-const multer = require('multer');
 const uploadToS3 = require('../utils/uploadToS3');
 const mailer = require('../utils/mailer');
-const fs = require('fs');
 const path = require('path');
 var Path = path.join(__dirname, '../uploads');
 const shortid = require('shortid');
@@ -39,7 +36,7 @@ saveDoubtToDb = (req, res, doubtId, fileId) => {
     subject: req.body.subject,
     class: req.user.class
   });
-  if (fileId) { newDoubt.image = configs.aws.bucketBaseUri+fileId+'.jpg'; }
+  if (fileId) { newDoubt.image = configs.aws.bucketBaseUri + fileId + '.jpg'; }
   newDoubt.save((err) => {
     if (err) { return res.status('400').send(err.errmsg); }
     console.log('newdoubt saved');
@@ -50,46 +47,51 @@ saveDoubtToDb = (req, res, doubtId, fileId) => {
         if (err) { return res.status('400').send(err.errmsg); }
 
         /// TODO send email to tutor
-        findAndSendToTutor(newDoubt,(err,tutor)=>{
-            if(err)
-            { return res.status('400').send(err); }
-            res.json({ 'doubt': newDoubt, 'tutor': tutor});
+        findAndSendToTutor(newDoubt, (err, tutor) => {
+          if (err) { return res.status('400').send(err); }
+          res.json({ 'doubt': newDoubt, 'tutor': tutor});
         });
-
-        
       }
     );
   });
 };
-findAndSendToTutor = (doubt,cb)=>{
-    Tutors.findOne({
-        subject:doubt.subject,
-        classes:doubt.class,
-        solved_today:{$lt:configs.app.dailySolutionLimit},
-        level:{$gt:0},
-        available:true  
-    }).sort('level').exec((err,tutor)=>{
-        if(err){
+findAndSendToTutor = (doubt, cb) => {
+  Tutors.findOne({
+    subject: doubt.subject,
+    classes: doubt.class,
+    solved_today: {$lt: configs.app.dailySolutionLimit},
+    level: {$gt: 0},
+    available: true
+  }).sort('level').exec((err, tutor) => {
+    if (err) {
+      return cb(err, null);
+    }
+    if (tutor) {
+      console.log(tutor);
+      mailer.mail(tutor.email, doubt, (err, resp) => {
+        if (err) { return cb(err); }
+        tutor.received_today+=1;
+        tutor.save((err)=>{
+            if(err)
             return cb(err,null);
-        }
-        if(tutor){
-            console.log(tutor);
-            mailer.mail(tutor.email,doubt,(err,resp)=>{
-                if(err)
-                return cb(err);
-                cb(null,resp)
-                // cb(null,tutor);
-            })
-            
-        }else{
-            Tutors.findOne({level:0},(err,tutor2)=>{
-                mailer.mail(tutor2.email,doubt,(err,resp)=>{
-                    if(err)
-                    return cb(err);
-                    cb(null,resp)
-                    // cb(null,tutor2);
-                })
-            })
-        }
-    });
-}
+            cb(null, resp);
+        })
+        
+        // cb(null,tutor);
+      });
+    } else {
+      Tutors.findOne({level: 0}, (err, tutor2) => {
+        mailer.mail(tutor2.email, doubt, (err, resp) => {
+          if (err) { return cb(err); }
+          tutor2.received_today+=1;
+        tutor2.save((err)=>{
+            if(err)
+            return cb(err,null);
+            cb(null, resp);
+        })
+          // cb(null,tutor2);
+        });
+      });
+    }
+  });
+};

@@ -13,8 +13,8 @@ var Users = require('../models/users');
 var configs = require('../config');
 module.exports = (app, passport) => {
   app.use('/auth', passport.authenticate('jwt', {session: false}));
-    app.use('/admin',verifyAdmin);
-    
+  app.use('/admin', verifyAdmin);
+
   app.get('/', (req, res) => {
     res.send('ok');
   });
@@ -40,21 +40,20 @@ module.exports = (app, passport) => {
     doubtHandler.addDoubt(req, res);
   });
 
-  app.post('/admin/tutor/create',(req,res)=>{
-      tutorHandler.addTutor(req,res);
+  app.post('/admin/tutor/create', (req, res) => {
+    tutorHandler.addTutor(req, res);
   });
-  
 };
 
-var verifyAdmin = function (req,res,next){
-    if(req.body.admin_key){
-        var password = req.body.admin_key;
-        if(password==configs.app.adminKey){
-            next();
-        }else{
-            res.status(403).send('unauthorized');
-        }
-    }else{
-        res.status(403).send('unauthorized');
+var verifyAdmin = function (req, res, next) {
+  if (req.body.admin_key) {
+    var password = req.body.admin_key;
+    if (password == configs.app.adminKey) {
+      next();
+    } else {
+      res.status(403).send('unauthorized');
     }
-}
+  } else {
+    res.status(403).send('unauthorized');
+  }
+};
