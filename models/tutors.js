@@ -1,4 +1,5 @@
 
+
 'use strict';
 
 const mongoose = require('mongoose');
@@ -9,7 +10,7 @@ var jwt = require('jsonwebtoken');
 var secret = process.env.JWT_KEY;
 const rand = require('csprng');
 var crypto = require('crypto');
-
+var configs = require('../config');
 var Tutor = new Schema({
 
 
