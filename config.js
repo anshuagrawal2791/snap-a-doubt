@@ -4,7 +4,8 @@ const dev = {
   app: {
     port: parseInt(process.env.DEV_APP_PORT) || process.env.PORT,
     referralReward1: 5,
-    referralReward2: 2
+    referralReward2: 2,
+    adminKey:process.env.ADMIN_KEY
   },
   db: {
     uri: process.env.DEV_DB_HOST || 'mongodb://localhost:27017/snap-a-doubt'
@@ -22,7 +23,8 @@ const test = {
   app: {
     port: parseInt(process.env.TEST_APP_PORT) || 8081,
     referralReward1: 5,
-    referralReward2: 2
+    referralReward2: 2,
+    adminKey:'anshuman'
   },
   db: {
     uri: process.env.TEST_DB_HOST || 'mongodb://localhost:27017/snap-a-doubt'

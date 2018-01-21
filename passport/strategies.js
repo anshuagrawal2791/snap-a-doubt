@@ -6,7 +6,7 @@ var crypto = require('crypto');
 const passportJWT = require('passport-jwt');
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
-
+const config = require('../config');
 module.exports = (passport) => {
   passport.use(new LocalStrategy({
     usernameField: 'email',
@@ -41,6 +41,16 @@ module.exports = (passport) => {
       });
   }
   ));
+  passport.use('admin',new LocalStrategy({
+    usernameField:'email',
+    passwordField:'admin_key'
+  },function(username,password,done){
+    console.log(username+'---'+password);
+      if(password===config.app.adminKey){
+        return done(null,{email:'aa'});
+      }
+      return done('unauthorized');
+  }))
 
   function validPassword (password, user) {
     let temp = user.salt;
