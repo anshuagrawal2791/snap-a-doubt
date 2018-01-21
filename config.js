@@ -9,6 +9,7 @@ const dev = {
     dailySolutionLimit: 3,
     emailId: process.env.EMAIL_ID_DEV,
     emailPassword: process.env.EMAIL_PASSWORD_DEV,
+    emailHost:'smtp.mailtrap.io',
     subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE']
   },
   db: {
@@ -32,6 +33,7 @@ const test = {
     dailySolutionLimit: 3,
     emailId: process.env.EMAIL_ID_TEST,
     emailPassword: process.env.EMAIL_PASSWORD_TEST,
+    emailHost:'smtp.mailtrap.io',
     subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE']
 
   },
