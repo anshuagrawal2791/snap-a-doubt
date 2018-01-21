@@ -1,35 +1,44 @@
-    AWS = require('aws-sdk'),
+var AWS = require('aws-sdk'),
     fs = require('fs'),
     path = require('path');
 const shortid = require('shortid');
+var proxy = require('proxy-agent');
+
+
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@');
 var config = require('../config');
-AWS.config.loadFromPath(path.join(__dirname,'../aws-config.json'));
-module.exports.upload = function (file, fileName, callback) {
+
+
+if (process.env.NODE_ENV !== 'dev') {
+    AWS.config.loadFromPath(path.join(__dirname, '../aws-config.json'));
+    AWS.config.update({
+        httpOptions: { agent: proxy('http://172.16.2.30:8080') }
+    });
+}
+module.exports.upload = (file, fileName, callback) => {
     var s3 = new AWS.S3();
-    var result = {
-        error: 0,
-        uploaded: []
-    }
-    fs.readFile(file.path, function (err, data) {
+    fs.readFile(file.path, (err, data) => {
         if (err)
             callback(err);
         else {
-            var params = { Bucket: config.aws.bucket, key: fileName + '.jpg', body: data };
-            console.log('inside uploadtos3 params: '+params);
+            var params = { Bucket: config.aws.bucket, Key: fileName + '.jpg', Body: data };
+            console.log('inside uploadtos3 params:---');
+            console.log(params);
 
             // uncomment this
 
-            // s3.putObject(params, function (err, data) {
-            //     if (err)
-            //         callback(err)
-            //     else {
-            //         callback(null,data.ETag);
-            //     }
-            // });
+            s3.putObject(params, (err, data) => {
+                console.log(err);
+                console.log(data);
+                if (err)
+                    callback(err)
+                else {
+                    callback(null, data);
+                }
+            });
 
             // comment this out
-            callback(null,"uploaded");
+            // callback(null,"uploaded");
         }
     })
 }

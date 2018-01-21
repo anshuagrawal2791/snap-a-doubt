@@ -11,25 +11,19 @@ var app = express();
 require('dotenv').load();
 require('./passport/strategies')(passport);
 
-
-
-mongoose.connect(config.db.uri).then(()=>{
-    console.log('db connected');
+mongoose.connect(config.db.uri).then(() => {
+  console.log('db connected');
 }).catch(console.log);
-
 
 mongoose.Promise = global.Promise;
 app.use('/controllers', express.static(process.cwd() + '/app/controllers'));
-app.use(bodyParser.urlencoded({extended:false}));
-
+app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(passport.initialize());
 
 routes(app, passport);
 
-
 var port = config.app.port;
-app.listen(port,  function () {
-    
-	console.log('Node.js listening on port ' + port + '...');
+app.listen(port, function () {
+  console.log('Node.js listening on port ' + port + '...');
 });
