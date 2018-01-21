@@ -15,6 +15,7 @@ if (process.env.NODE_ENV !== 'dev') {
         httpOptions: { agent: proxy('http://172.16.2.30:8080') }
     });
 }
+AWS.config.loadFromPath(path.join(__dirname, '../aws-config.json'));
 module.exports.upload = (file, fileName, callback) => {
     var s3 = new AWS.S3();
     fs.readFile(file.path, (err, data) => {
@@ -25,7 +26,6 @@ module.exports.upload = (file, fileName, callback) => {
             console.log('inside uploadtos3 params:---');
             console.log(params);
 
-            // uncomment this
 
             s3.putObject(params, (err, data) => {
                 console.log(err);
@@ -36,9 +36,6 @@ module.exports.upload = (file, fileName, callback) => {
                     callback(null, data);
                 }
             });
-
-            // comment this out
-            // callback(null,"uploaded");
         }
     })
 }
