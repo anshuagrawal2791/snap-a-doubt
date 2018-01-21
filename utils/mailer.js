@@ -4,22 +4,21 @@ module.exports.mail = (recipient, data, cb) => {
   var transporter;
   if (process.env.NODE_ENV == 'test') {
     transporter = mailer.createTransport({
-      host: 'smtp.mailtrap.io',
-      port: 465,
-      secure: true,
+      host: configs.app.emailHost,
+      port: 2525,
       auth: {
-        user: '69271bffcbc1a9',
-        pass: '754e9bb7253a62'
+        user: configs.app.emailId,
+        pass: configs.app.emailPassword
       },
       proxy: 'http://172.16.2.30:8080'
     });
   } else {
     transporter = mailer.createTransport({
-      host: 'smtp.mailtrap.io',
+      host: configs.app.emailHost,
       port: 2525,
       auth: {
-        user: '69271bffcbc1a9',
-        pass: '754e9bb7253a62'
+        user: configs.app.emailId,
+        pass: configs.app.emailPassword
       }
     });
   }
