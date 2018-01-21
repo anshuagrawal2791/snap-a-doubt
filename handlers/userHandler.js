@@ -33,41 +33,28 @@ module.exports = {
                         console.log(err);
                     });
                     newUser.points += config.app.referralReward2;
-                    newUser.save((err) => {
-                        if (err)
-                            return res.status('400').send(err.errmsg);
-                        Users.findOne({ email: newUser.email }, (err, user) => {
-                            if(err)
-                                res.status('400').send(err.errmsg);
-                            res.send(newUser.toAuthJSON());
-                        });
-                    })
+                    saveUserToDb(req, res, newUser);
                 }
-                else{
-                    newUser.save((err) => {
-                        if (err)
-                            return res.status('400').send(err.errmsg);
-                        Users.findOne({ email: newUser.email }, (err, user) => {
-                            if(err)
-                                res.status('400').send(err.errmsg);
-                            res.send(newUser.toAuthJSON());
-                        });
-                    });
+                else {
+                    saveUserToDb(req, res, newUser);
                 }
             })
         } else {
-            newUser.save((err) => {
-                if (err)
-                    return res.status('400').send(err.errmsg);
-                Users.findOne({ email: newUser.email }, (err, user) => {
-                    if(err)
-                        res.status('400').send(err.errmsg);
-                    res.send(newUser.toAuthJSON());
-                });
-
-            })
+            saveUserToDb(req, res, newUser);
         }
 
+    },
+    saveUserToDb: (req, res, newUser) => {
+        newUser.save((err) => {
+            if (err)
+                return res.status('400').send(err.errmsg);
+            Users.findOne({ email: newUser.email }, (err, user) => {
+                if (err)
+                    res.status('400').send(err.errmsg);
+                res.send(newUser.toAuthJSON());
+            });
+
+        });
     },
     toAuthJSON: (user) => {
         return {
@@ -76,7 +63,7 @@ module.exports = {
             image: user.image,
             name: user.name,
             referral_code: user.referral_code,
-            points:user.points
+            points: user.points
         }
 
     },

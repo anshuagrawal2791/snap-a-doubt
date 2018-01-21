@@ -24,13 +24,6 @@ module.exports = (app, passport) => {
     app.post('/login',
         passport.authenticate('local', { session: false }),
         function (req, res) {
-            // console.log(req.user);
-            // var payLoad = {};
-            // payLoad.id=req.user._id;
-            // payLoad.email=req.user.email;
-            // console.log(payLoad);
-            // const token = jwt.sign(payLoad, process.env.JWT_KEY);
-            // console.log(req.user);
             if (!req.user)
                 return res.status(400).send(err);
             res.send(userHandler.toAuthJSON(req.user));

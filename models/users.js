@@ -77,7 +77,8 @@ User.methods.toAuthJSON = function () {
         token: this.generateJWT(),
         image: this.image,
         name: this.name,
-        referral_code : this.referral_code
+        referral_code : this.referral_code,
+        points:this.points
     }
 };
 
