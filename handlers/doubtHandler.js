@@ -60,6 +60,7 @@ findAndSendToTutor = (doubt, cb) => {
     subject: doubt.subject,
     classes: doubt.class,
     solved_today: {$lt: configs.app.dailySolutionLimit},
+    received_today:{$lt: configs.app.dailySolutionLimit},
     level: {$gt: 0},
     available: true
   }).sort('level').exec((err, tutor) => {
