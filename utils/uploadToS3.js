@@ -18,7 +18,7 @@ module.exports.upload = (file, fileName, callback) => {
   var s3 = new AWS.S3();
   fs.readFile(file.path, (err, data) => {
     if (err) { callback(err); } else {
-      var params = { Bucket: config.aws.bucket, Key: fileName + '.jpg', Body: data };
+      var params = { Bucket: config.aws.bucket, Key: fileName, Body: data };
       console.log('inside uploadtos3 params:---');
       console.log(params);
 

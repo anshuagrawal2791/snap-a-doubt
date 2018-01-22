@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('../models/users');
+var Tutors = require('../models/tutors');
 var LocalStrategy = require('passport-local').Strategy;
 var crypto = require('crypto');
 const passportJWT = require('passport-jwt');
@@ -41,16 +42,22 @@ module.exports = (passport) => {
       });
   }
   ));
-  // passport.use('admin',new LocalStrategy({
-  //   usernameField:'email',
-  //   passwordField:'admin_key'
-  // },function(username,password,done){
-  //   console.log(username+'---'+password);
-  //     if(password===config.app.adminKey){
-  //       return done(null,{email:'aa'});
-  //     }
-  //     return done('unauthorized');
-  // }))
+  passport.use('tutor',new LocalStrategy({
+    usernameField:'email',
+    passwordField:'password'
+  },function(username,password,done){
+    console.log('here');
+    Tutors.findOne({email:username},(err,tutor)=>{
+      if (err) { return done(err); }
+      if (!tutor) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      if (password!=tutor.password) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, tutor);
+    })
+  }));
 
   function validPassword (password, user) {
     let temp = user.salt;

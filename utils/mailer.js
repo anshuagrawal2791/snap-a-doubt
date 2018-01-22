@@ -1,6 +1,6 @@
 const mailer = require('nodemailer');
 const configs = require('../config');
-module.exports.mail = (recipient, data, cb) => {
+module.exports.mail = (recipient, data,subject, cb) => {
   var transporter;
   if (process.env.NODE_ENV == 'test') {
     transporter = mailer.createTransport({
@@ -12,6 +12,7 @@ module.exports.mail = (recipient, data, cb) => {
       },
       proxy: 'http://172.16.2.30:8080'
     });
+    return cb(null,{'message':'sent to '+recipient,'data':data});
   } else {
     transporter = mailer.createTransport({
       host: configs.app.emailHost,
@@ -25,7 +26,7 @@ module.exports.mail = (recipient, data, cb) => {
   var mailOptions = {
     from: 'snap-a-doubt@gmail.com',
     to: recipient,
-    subject: 'New Doubt',
+    subject: subject,
     text: data.toString()
   };
 //   console.log(data.toString());

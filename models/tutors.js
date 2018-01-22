@@ -14,18 +14,21 @@ var Tutor = new Schema({
 
   phone_number: String,
   email: { type: String, unique: true, index: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'] },
-  password: { type: String},
+  password: { type: String,default:rand(24,24)},
   level: {type: Number, required: true},
   solutions: {type: [String]},
   name: String,
   classes: { type: [Number]},
-  last_posted: Date,
+  last_posted: {type:Date,default:new Date()},
   solved_today: {type: Number, default: 0},
   received_today:{type:Number,default:0},
+  last_received:{type:Date,default:new Date()},
   created_at: {
     type: Date,
     default: Date.now
   },
+  sols:{type:[String]},
+  doubts:{type:[String]},
   modified_at: Date,
   subject: {type: String, enum: configs.app.subjects},
   available: {type: Boolean, default: true}
@@ -36,7 +39,6 @@ var Tutor = new Schema({
 Tutor.pre('save', function (next) {
   var user = this;
   user.modified_at = new Date();
-  user.password = rand(24, 24);
   next();
 });
 
