@@ -14,7 +14,7 @@ var Tutor = new Schema({
 
   phone_number: String,
   email: { type: String, unique: true, index: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'] },
-  password: { type: String,default:rand(24,24)},
+  password: { type: String},
   level: {type: Number, required: true},
   solutions: {type: [String]},
   name: String,

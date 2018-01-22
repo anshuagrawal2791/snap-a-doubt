@@ -22,7 +22,8 @@ module.exports = {
       email: req.body.email,
       level: req.body.level,
       name: req.body.name,
-      subject: req.body.subject
+      subject: req.body.subject,
+      password:rand(24,24)
     });
     for (let cl in classes) {
       newTutor.classes.push(classes[cl]);
@@ -66,8 +67,7 @@ saveSolToDb = (req,res,solId,fileId)=>{
     doubtId:req.body.doubt_id,
     file:configs.aws.bucketBaseUri + fileId + '.pdf',
   });
-  if(req.user.level==2)
-  newSol.verified=true;
+  if(req.user.level==2)newSol.verified=true;
   newSol.save((err)=>{
     if(err)
     return res.status(400).send(err);

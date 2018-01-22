@@ -43,23 +43,23 @@ saveDoubtToDb = (req, res, doubtId, fileId) => {
     console.log('newdoubt saved');
 
     // send doubt to tutor
-    findAndSendToTutor(newDoubt, (err, resp) => {
+    findAndSendToTutor(newDoubt, (err,tutor) => {
       if (err) { return res.status('400').send(err); }
 
-      updateDoubtInUser(req,res,newDoubt);
+      updateDoubtInUser(req,res,newDoubt,tutor);
       
     });
 
 
   });
 };
-updateDoubtInUser = (req,res,doubt)=>{
+updateDoubtInUser = (req,res,doubt,tutor)=>{
   Users.update(
     { _id: req.user },
     { $push: { doubts: doubt.id } },
     (err) => {
       if (err) { return res.status('400').send(err.errmsg); }
-      res.json({ 'doubt': doubt, 'user': req.user });
+      res.json({ 'doubt': doubt, 'user': req.user,'tutor':tutor});
     }
   );
 }
@@ -87,7 +87,7 @@ findAndSendToTutor = (doubt, cb) => {
         tutor.save((err) => {
           if (err)
             return cb(err, null);
-          cb(null, resp);
+          cb(null,tutor);
         })
       });
     } else {
@@ -106,7 +106,7 @@ findAndSendToTutor = (doubt, cb) => {
           tutor2.save((err) => {
             if (err)
               return cb(err, null);
-            cb(null, resp);
+            cb(null, tutor2);
           })
         });
       });

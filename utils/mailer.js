@@ -27,7 +27,7 @@ module.exports.mail = (recipient, data,subject, cb) => {
     from: 'snap-a-doubt@gmail.com',
     to: recipient,
     subject: subject,
-    text: data.toString()
+    text: JSON.stringify(data)
   };
 //   console.log(data.toString());
   transporter.sendMail(mailOptions, function (error, info) {
