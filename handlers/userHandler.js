@@ -1,5 +1,6 @@
 
 var Users = require('../models/users');
+var Sols = require('../models/sols');
 var config = require('../config');
 var jwt = require('jsonwebtoken');
 module.exports = {
@@ -39,6 +40,13 @@ module.exports = {
     } else {
       saveUserToDb(req, res, newUser);
     }
+  },
+  getSols:(req,res)=>{
+    Sols.find({doubtId:{$in:req.user.doubts},verified:true},(err,sols)=>{
+      if(err)
+      return res.status(400).send(err);
+      res.send(sols);
+    })
   },
   toAuthJSON: (user) => {
     return {

@@ -39,6 +39,9 @@ module.exports = (app, passport) => {
     console.log('insided /auth/doubt');
     doubtHandler.addDoubt(req, res);
   });
+  app.get('/auth/sols',(req,res)=>{
+    userHandler.getSols(req,res);
+  });
 
   app.post('/admin/tutor/create', (req, res) => {
     tutorHandler.addTutor(req, res);
