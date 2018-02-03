@@ -34,7 +34,7 @@ module.exports = {
     });
   },
   clearReceivedToday: () => {
-    Tutors.update({ level: { $in: [0, 1, 2] } }, { $set: { received_today: 0, solved_today: 0 } }, { multi: true }, (err, numAffected) => {
+    Tutors.update({ level: { $in: [0, 1, 2] } }, { $set: { received_today: 0, solved_today: 0,verfied_today:0 } }, { multi: true }, (err, numAffected) => {
       console.log(JSON.stringify(numAffected) + ' are updated');
     })
   },
@@ -51,6 +51,34 @@ module.exports = {
     })
 
   },
+  verifySol:(req,res)=>{
+    var solId = req.body.sol_id;
+    Sols.findOne({id:solId},(err,sol)=>{
+      if(err)
+        return res.status(400).send(err);
+      sol.verified=true;
+      sol.save((err)=>{
+        if(err)
+        return res.status(400).send(err);
+        Users.findOne({doubts:sol.doubtId},{fcm_token:1},(err,user)=>{
+          if(err)
+          return res.status(400).send('doubt poster not found');
+          sendNotif.send('Solution','Solution Posted for your doubt',user.fcm_token,sol,(err,resp)=>{
+            if(err)
+            return res.status(400).send(err);
+            Tutors.update({email:req.user.email},
+              {$push:{verified_sols:solId},$inc:{verified_today:1}},(err)=>{
+                if(err)
+                return res.status(400).send(err);
+                res.status(200).send(sol);
+              })           
+          });
+        });
+      })
+    })
+  }
+  
+  ,
   toAuthJSON: (tutor) => {
     return {
       email: user.email,
@@ -77,7 +105,7 @@ saveSolToDb = (req,res,solId,fileId)=>{
         return res.status(400).send('doubt poster not found');
         sendNotif.send('Solution','Solution Posted for your doubt',user.fcm_token,newSol,(err,resp)=>{
           if(err)
-          return res.status(400).send('could not send notification');
+          return res.status(400).send(err);
           updateSolInTutor(req,res,newSol,(err,resp)=>{
             if(err)
             return res.status(400).send(err);
@@ -88,10 +116,15 @@ saveSolToDb = (req,res,solId,fileId)=>{
       });
       
     }else{
-        sendForVerification(req,res,newSol,(err,resp)=>{
+        sendForVerification(req,res,newSol,(err,resp1)=>{
           if(err)
           return res.status(400).send(err);
-          res.status(200).json({'verifier':resp,'newSol':newSol});
+          updateSolInTutor(req,res,newSol,(err,resp)=>{
+            if(err)
+            return res.status(400).send(err);
+            res.status(200).json({'verifier':resp1,'newSol':newSol});
+          })
+          
         });
     }
   });
@@ -101,16 +134,30 @@ sendForVerification=(req,res,sol,cb)=>{
     subject:req.user.subject,
     classes:{$in:req.user.classes},
     level:2,
-    available:true
-  }).exec((err,tutor)=>{
-    if(err||!tutor)
-    return res.status(400).send('no tutor to verify');
-    mailer.mail(tutor.email,{sol:sol},'Verifiy Solution',(err,resp)=>{
-      if(err)
-      return cb(err);
-      cb(null,tutor)
-      
-    })
+    available:true,
+    verified_today:{$lt: configs.app.dailyVerificationLimit}
+  }).sort('verified_today').exec((err,tutor)=>{
+    if(err)
+    return res.status(400).send(err);
+    else if(tutor){
+      mailer.mail(tutor.email,{sol:sol},'Verifiy Solution',(err,resp)=>{
+        if(err)
+        return cb(err);
+        cb(null,tutor)
+        
+      })
+    }else{
+      Tutors.findOne({ level: 0 }, (err, tutor2) => {
+        if (err || !tutor2) {
+          return cb(err, null);
+        }
+        mailer.mail(tutor2.email, {sol:sol},'Verify Solution', (err, resp) => {
+          if (err) { return cb(err); }
+          cb(null, tutor2);
+        });
+      });
+    }
+    
   })
 }
 updateSolInTutor=(req,res,sol,cb)=>{

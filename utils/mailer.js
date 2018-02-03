@@ -2,7 +2,7 @@ const mailer = require('nodemailer');
 const configs = require('../config');
 module.exports.mail = (recipient, data,subject, cb) => {
   var transporter;
-  if (process.env.NODE_ENV == 'test') {
+  if (process.env.NODE_ENV == 'test'&&configs.app.proxy) {
     transporter = mailer.createTransport({
       host: configs.app.emailHost,
       port: 2525,

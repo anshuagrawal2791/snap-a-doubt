@@ -6,11 +6,14 @@ const dev = {
     referralReward1: 5,
     referralReward2: 2,
     adminKey: process.env.ADMIN_KEY,
-    dailySolutionLimit: 3,
+    dailySolutionLimit: 10,
+    dailyVerificationLimit:10,
     emailId: process.env.EMAIL_ID_DEV,
     emailPassword: process.env.EMAIL_PASSWORD_DEV,
     emailHost:'smtp.mailtrap.io',
-    subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE']
+    subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE'],
+    fcmKey:process.env.FCM_KEY_DEV,
+    proxy:false
   },
   db: {
     uri: process.env.DEV_DB_HOST || 'mongodb://localhost:27017/snap-a-doubt'
@@ -30,11 +33,14 @@ const test = {
     referralReward1: 5,
     referralReward2: 2,
     adminKey: 'anshuman',
-    dailySolutionLimit: 3,
+    dailySolutionLimit: 10,
+    dailyVerificationLimit:10,
     emailId: process.env.EMAIL_ID_TEST,
     emailPassword: process.env.EMAIL_PASSWORD_TEST,
     emailHost:'smtp.mailtrap.io',
-    subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE']
+    subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE'],
+    fcmKey:process.env.FCM_KEY_TEST,
+    proxy:false
 
   },
   db: {

@@ -3,12 +3,12 @@ var AWS = require('aws-sdk'),
   path = require('path');
 const shortid = require('shortid');
 var proxy = require('proxy-agent');
-
+require('dotenv').load();
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@');
 var config = require('../config');
 
-AWS.config.loadFromPath(path.join(__dirname, '../aws-config.json'));
-if (process.env.NODE_ENV !== 'dev') {
+//AWS.config.loadFromPath(path.join(__dirname, '../aws-config.json'));
+if (process.env.NODE_ENV !== 'dev'&&config.app.proxy) {
   // AWS.config.loadFromPath(path.join(__dirname, '../aws-config.json'));
   AWS.config.update({
     httpOptions: { agent: proxy('http://172.16.2.30:8080') }

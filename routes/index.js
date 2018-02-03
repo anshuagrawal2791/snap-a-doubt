@@ -54,7 +54,12 @@ module.exports = (app, passport) => {
       
       tutorHandler.submitSol(req,res);
   });
-
+  app.post('/tutor/solution/verify',verifyLevelTwoTutor,(req,res)=>{
+    console.log(req);
+    if(!req.body.sol_id)
+    return res.status(400).send('enter solution id');
+    tutorHandler.verifySol(req,res);
+  });
 
 };
 
@@ -79,6 +84,21 @@ var verifyTutor = function(req,res,done){
       return res.status(403).send('unauthorized');
     }
     if (req.body.password!=tutor.password) {
+      return res.status(403).send('unauthorized');
+    }
+    req.user=tutor;
+    return done(null, tutor);
+  })
+}
+var verifyLevelTwoTutor = function(req,res,done){
+  console.log(req.body);
+  Tutors.findOne({email:req.body.email},function(err,tutor){
+    console.log(tutor);
+    if (err) { res.status(403).send('unauthorized'); }
+    if (!tutor) {
+      return res.status(403).send('unauthorized');
+    }
+    if (req.body.password!=tutor.password||tutor.level!=2) {
       return res.status(403).send('unauthorized');
     }
     req.user=tutor;
