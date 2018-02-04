@@ -3,7 +3,6 @@
 
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var bcrypt = require('bcrypt');
 var SALT_WORK_FACTOR = 10;
 var jwt = require('jsonwebtoken');
 var secret = process.env.JWT_KEY;
