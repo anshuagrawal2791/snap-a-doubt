@@ -10,7 +10,7 @@ const dev = {
     dailyVerificationLimit:10,
     emailId: process.env.EMAIL_ID_DEV,
     emailPassword: process.env.EMAIL_PASSWORD_DEV,
-    emailHost:'smtp.mailtrap.io',
+    emailHost:'smtp.gmail.com',
     subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE'],
     fcmKey:process.env.FCM_KEY_DEV,
     proxy:false
@@ -37,7 +37,7 @@ const test = {
     dailyVerificationLimit:10,
     emailId: process.env.EMAIL_ID_TEST,
     emailPassword: process.env.EMAIL_PASSWORD_TEST,
-    emailHost:'smtp.mailtrap.io',
+    emailHost:'smtp.gmail.com',
     subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE'],
     fcmKey:process.env.FCM_KEY_TEST,
     proxy:true
