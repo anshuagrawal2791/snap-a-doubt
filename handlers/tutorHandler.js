@@ -147,6 +147,7 @@ sendForVerification=(req,res,sol,cb)=>{
         
       })
     }else{
+      console.log('no verifier found');
       Tutors.findOne({ level: 0 }, (err, tutor2) => {
         if (err || !tutor2) {
           return cb(err, null);

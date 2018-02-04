@@ -48,7 +48,6 @@ module.exports = (app, passport) => {
   });
 
   app.post('/tutor/solution/submit',uploads.array('solution', 12),verifyTutor,(req,res)=>{
-      console.log(req);
       if(!req.files){
         return res.status(400).send('Please attach file');
       }
