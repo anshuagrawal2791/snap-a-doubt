@@ -3,6 +3,7 @@ var Users = require('../models/users');
 var Sols = require('../models/sols');
 var config = require('../config');
 var jwt = require('jsonwebtoken');
+var Doubts = require('../models/doubts');
 module.exports = {
 
   addUser: (req, res) => {
@@ -41,24 +42,64 @@ module.exports = {
       saveUserToDb(req, res, newUser);
     }
   },
-  getSols:(req,res)=>{
-    Sols.find({doubtId:{$in:req.user.doubts},verified:true},(err,sols)=>{
-      if(err)
-      return res.status(400).send(err);
-      res.send(sols);
-    })
+  getSols: (req, res) => {
+    // Sols.find({doubtId:{$in:req.user.doubts},verified:true},(err,sols)=>{
+    //   if(err)
+    //   return res.status(400).send(err);
+    //   res.send(sols);
+    // })
+    var userDoubts = req.user.doubts;
+    var resp = [];
+    var errOccured;
+    var processed=0;
+    var total=userDoubts.length;
+    for (var i = 0; i < userDoubts.length; i++) {
+      var doubtId = userDoubts[i];
+
+      Doubts.findOne({ id: doubtId }, (err, doubt) => {
+        if (err) {
+          errOccured = err;
+          checkDone();
+        }
+        else {
+          var cur = {};
+          cur.doubt = doubt;
+          Sols.find({ 'doubtId': doubt.id, verified: true }, (err, sols) => {
+            if (err) {
+              errOccured = err;
+              checkDone();
+            }
+            else{
+              console.log(sols);
+              cur.sols = sols;
+              resp.push(cur);
+              checkDone();
+            }
+          });
+        }
+      });
+    }
+    var checkDone = () => {
+      processed++;
+      if(processed==total){
+        if(errOccured)
+        return res.status(400).send(errOccured);
+        res.send(resp);
+      }
+    }
+
   },
-  updateUser:(req,res)=>{
-    Users.findOne({email:req.user.email},(err,user)=>{
-      if(err)
-      return res.status(400).send(err);
-      if(!user)
-      return res.status(400).send('no user found');
-      if(req.body.fcm_token) user.fcm_token=req.body.fcm_token;
-      if(req.body.name) user.name=req.body.name;
-      user.save((err)=>{
-        if(err)
+  updateUser: (req, res) => {
+    Users.findOne({ email: req.user.email }, (err, user) => {
+      if (err)
         return res.status(400).send(err);
+      if (!user)
+        return res.status(400).send('no user found');
+      if (req.body.fcm_token) user.fcm_token = req.body.fcm_token;
+      if (req.body.name) user.name = req.body.name;
+      user.save((err) => {
+        if (err)
+          return res.status(400).send(err);
         res.send(user.toAuthJSON());
       });
     })
