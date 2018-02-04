@@ -60,6 +60,8 @@ module.exports = (app, passport) => {
     //console.log(req);
     if(!req.body.sol_id)
     return res.status(400).send('enter solution id');
+    if(typeof req.body.correct=='undefined' || req.body.correct=='')
+    return res.status(400).send('enter if the solution is correct');
     tutorHandler.verifySol(req,res);
   });
   app.put('/auth/user',(req,res)=>{
