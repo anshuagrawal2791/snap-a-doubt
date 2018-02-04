@@ -19,7 +19,7 @@ mongoose.connect(config.db.uri).then(() => {
 
 mongoose.Promise = global.Promise;
 app.use('/controllers', express.static(process.cwd() + '/app/controllers'));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ limit:'50mb',extended: false }));
 
 app.use(passport.initialize());
 

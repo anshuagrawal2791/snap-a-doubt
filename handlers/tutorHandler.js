@@ -12,7 +12,7 @@ var Path = path.join(__dirname, '../uploads');
 var Sols = require('../models/sols');
 var sendNotif = require('../utils/sendNotif');
 const mailer = require('../utils/mailer');
-
+const rand = require('csprng');
 module.exports = {
 
   addTutor: (req, res) => {
