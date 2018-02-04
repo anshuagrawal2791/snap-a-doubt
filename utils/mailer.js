@@ -19,7 +19,8 @@ module.exports.mail = (recipient, data,subject, cb) => {
   } else {
     transporter = mailer.createTransport({
       host: configs.app.emailHost,
-      port: 2525,
+      port: 465,
+      secure:true,
       auth: {
         user: configs.app.emailId,
         pass: configs.app.emailPassword
