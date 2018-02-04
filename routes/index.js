@@ -63,6 +63,9 @@ module.exports = (app, passport) => {
     return res.status(400).send('enter solution id');
     tutorHandler.verifySol(req,res);
   });
+  app.put('/auth/user',(req,res)=>{
+    userHandler.updateUser(req,res);
+  });
 
 };
 

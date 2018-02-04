@@ -48,6 +48,21 @@ module.exports = {
       res.send(sols);
     })
   },
+  updateUser:(req,res)=>{
+    Users.findOne({email:req.user.email},(err,user)=>{
+      if(err)
+      return res.status(400).send(err);
+      if(!user)
+      return res.status(400).send('no user found');
+      if(req.body.fcm_token) user.fcm_token=req.body.fcm_token;
+      if(req.body.name) user.name=req.body.name;
+      user.save((err)=>{
+        if(err)
+        return res.status(400).send(err);
+        res.send(user.toAuthJSON());
+      });
+    })
+  },
   toAuthJSON: (user) => {
     return {
       email: user.email,
