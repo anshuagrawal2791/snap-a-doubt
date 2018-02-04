@@ -70,7 +70,6 @@ module.exports = {
               checkDone();
             }
             else{
-              console.log(sols);
               cur.sols = sols;
               resp.push(cur);
               checkDone();
