@@ -15,7 +15,7 @@ module.exports.mail = (recipient, data,subject, cb) => {
       },
       proxy: 'http://172.16.2.30:8080'
     });
-   // return cb(null,{'message':'sent to '+recipient,'data':data});
+    return cb(null,{'message':'sent to '+recipient,'data':data});
   } else {
     transporter = mailer.createTransport({
       host: configs.app.emailHost,
