@@ -135,7 +135,7 @@ sendForVerification=(req,res,sol,cb)=>{
     classes:{$in:req.user.classes},
     level:2,
     available:true,
-    verified_today:{$lt: configs.app.dailyVerificationLimit}
+    verified_today:{$lt:configs.app.dailyVerificationLimit}
   }).sort('verified_today').exec((err,tutor)=>{
     if(err)
     return res.status(400).send(err);
