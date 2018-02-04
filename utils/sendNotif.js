@@ -5,6 +5,7 @@ const FCM = require('fcm-node');
 var proxy = require('proxy-agent');
 exports.send = (topic, message, to, metadata, callback) => {
 
+	if(!configs.app.proxy){
 	var serverKey = configs.app.fcmKey;
 	var fcm = new FCM(serverKey);
 	to = (to)?to:'e-OsECZjhHU:APA91bEjQG-psv3O0mCJrkKeWOdFsjAfFMFYlBrTXK0wqHWoZoVTnP9Re3g_eGQjLcBULEIQLJTEMllWjTPP9YbtocFqlfret9DCZHwpMcnkQPiUZhem26E6rDqW2__xarITFSNpconC';
@@ -23,5 +24,6 @@ exports.send = (topic, message, to, metadata, callback) => {
 			return callback(err);
 		callback(null,resp);
 	});
-
+	}
+	else callback(null,'sent notif');
 };

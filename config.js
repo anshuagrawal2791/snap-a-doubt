@@ -40,7 +40,7 @@ const test = {
     emailHost:'smtp.mailtrap.io',
     subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE'],
     fcmKey:process.env.FCM_KEY_TEST,
-    proxy:false
+    proxy:true
 
   },
   db: {
