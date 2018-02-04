@@ -71,7 +71,7 @@ findAndSendToTutor = (doubt, cb) => {
     received_today: { $lt: configs.app.dailySolutionLimit },
     level: { $gt: 0 },
     available: true
-  }).sort('solved_today').sort('level').exec((err, tutor) => {
+  }).sort({'solved_today':1,'level':1}).exec((err, tutor) => {
     if (err) {
       return cb(err, null);
     }
