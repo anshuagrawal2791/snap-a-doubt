@@ -28,7 +28,7 @@ module.exports.mail = (recipient, data,subject, cb) => {
     });
   }
   // to test
-  recipient='anshuagrawal2791@gmail.com';
+  //recipient='anshuagrawal2791@gmail.com';
   var mailOptions = {
     from: 'support@vegatva.com',
     to: recipient,
