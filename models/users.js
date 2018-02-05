@@ -26,6 +26,7 @@ var User = new Schema({
     type: Date,
     default: Date.now
   },
+  feedbacks:{type:[String]},
   referral_code: String,
   points: {type: Number, default: 0},
   fcm_token: {type: String, required: true},

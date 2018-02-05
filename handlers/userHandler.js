@@ -103,6 +103,13 @@ module.exports = {
       });
     })
   },
+  addFeedback:(req,res)=>{
+    Users.update({email:req.user.email},{$push:{feedbacks:req.body.feedback}},(err)=>{
+      if(err)
+      return res.status(400).send(err);
+      res.json({'user':req.user});
+    })
+  },
   toAuthJSON: (user) => {
     return {
       email: user.email,

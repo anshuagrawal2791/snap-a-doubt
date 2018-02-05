@@ -39,6 +39,11 @@ module.exports = (app, passport) => {
     console.log('insided /auth/doubt');
     doubtHandler.addDoubt(req, res);
   });
+  app.post('/auth/feedback',(req,res)=>{
+    if(!req.body.feedback)
+    return res.status(400).send('enter feedback');
+    userHandler.addFeedback(req,res);
+  });
   app.get('/auth/sols',(req,res)=>{
     userHandler.getSols(req,res);
   });
