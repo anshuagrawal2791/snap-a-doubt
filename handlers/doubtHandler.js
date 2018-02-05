@@ -13,6 +13,8 @@ const deleteFolderRecursive = require('../utils/deleteDirectoryContent');
 
 module.exports = {
   addDoubt: (req, res) => {
+    if(req.user.points<configs.app.costOfQuestion)
+    return res.status(400).send('not enough points');
     var doubtId = shortid.generate();
     var fileId = doubtId + '-com-' + shortid.generate();
     if (req.files) {
@@ -56,7 +58,7 @@ saveDoubtToDb = (req, res, doubtId, fileId) => {
 updateDoubtInUser = (req,res,doubt,tutor)=>{
   Users.update(
     { _id: req.user },
-    { $push: { doubts: doubt.id } },
+    { $push: { doubts: doubt.id },$inc:{points:-configs.app.costOfQuestion} },
     (err) => {
       if (err) { return res.status('400').send(err.errmsg); }
       res.json({ 'doubt': doubt, 'user': req.user,'tutor':tutor});
