@@ -4,7 +4,6 @@ var Sols = require('../models/sols');
 var config = require('../config');
 var jwt = require('jsonwebtoken');
 var Doubts = require('../models/doubts');
-var admin = require('firebase-admin');
 module.exports = {
 
   addUser: (req, res) => {
@@ -43,9 +42,16 @@ module.exports = {
       saveUserToDb(req, res, newUser);
     }
   },
-  tokenSignIn: (req, res) => {
-    
-    res.send('google signin');
+  tokenSignIn: (req,res) => {
+    Users.findOne({'email':req.body.email},(err,user)=>{
+      if(err)
+      return res.status(400).send(err);
+      if(!user){
+        return res.status(200).json({'resp':'new user'});
+      }else{
+        return res.json({'resp':'user exists','user':user.toAuthJSON()});
+      }
+    });
   },
   getSols: (req, res) => {
     // Sols.find({doubtId:{$in:req.user.doubts},verified:true},(err,sols)=>{

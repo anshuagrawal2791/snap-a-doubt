@@ -30,10 +30,11 @@ module.exports = (app, passport) => {
       res.send(userHandler.toAuthJSON(req.user));
     });
   app.post('/tokensignin',(req,res)=>{
+    console.log('ond')
     if(!req.body.email||!req.body.token){
-      return res.status(400).send('send email and token');
-      userHandler.tokenSignIn(req,res);
+      return res.status(400).send('send email and token'); 
     }
+    userHandler.tokenSignIn(req,res);
   });
   app.get('/auth/check_token', (req, res) => {
     res.send('valid token');

@@ -74,7 +74,8 @@ User.methods.toAuthJSON = function () {
     image: this.image,
     name: this.name,
     referral_code: this.referral_code,
-    points: this.points
+    points: this.points,
+    all_details: this
   };
 };
 
