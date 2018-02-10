@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "33551828600",
+    "firebase_url": "https://quizmater-176910.firebaseio.com",
+    "project_id": "quizmater-176910",
+    "storage_bucket": "quizmater-176910.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33551828600:android:c80b3ce4b99f01f6",
+        "android_client_info": {
+          "package_name": "com.project.genius.projectx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "33551828600-3hbg6dar9lge0mlepv5m66hr1ptio9b8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.genius.projectx",
+            "certificate_hash": "fd49c2f8e8c7be7dc46af675eb9e9f736611c92c"
+          }
+        },
+        {
+          "client_id": "33551828600-qvq23m1tm30ghj3qgt15khhrgismmue8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.genius.projectx",
+            "certificate_hash": "5ef6cbbbf858a1bfe454c3406147f67aa3a6b045"
+          }
+        },
+        {
+          "client_id": "33551828600-0j1qnokclsbp1u5kv7141sjgb97la16k.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "33551828600-cak095502gt28am29f693813f3nrn5lh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyRIqGwOkrtix1iEQACTMf-2kf8lERDqE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

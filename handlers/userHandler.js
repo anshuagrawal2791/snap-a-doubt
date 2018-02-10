@@ -4,6 +4,7 @@ var Sols = require('../models/sols');
 var config = require('../config');
 var jwt = require('jsonwebtoken');
 var Doubts = require('../models/doubts');
+var admin = require('firebase-admin');
 module.exports = {
 
   addUser: (req, res) => {
@@ -42,6 +43,10 @@ module.exports = {
       saveUserToDb(req, res, newUser);
     }
   },
+  tokenSignIn: (req, res) => {
+    
+    res.send('google signin');
+  },
   getSols: (req, res) => {
     // Sols.find({doubtId:{$in:req.user.doubts},verified:true},(err,sols)=>{
     //   if(err)
@@ -51,8 +56,8 @@ module.exports = {
     var userDoubts = req.user.doubts;
     var resp = [];
     var errOccured;
-    var processed=0;
-    var total=userDoubts.length;
+    var processed = 0;
+    var total = userDoubts.length;
     for (var i = 0; i < userDoubts.length; i++) {
       var doubtId = userDoubts[i];
 
@@ -69,7 +74,7 @@ module.exports = {
               errOccured = err;
               checkDone();
             }
-            else{
+            else {
               cur.sols = sols;
               resp.push(cur);
               checkDone();
@@ -80,9 +85,9 @@ module.exports = {
     }
     var checkDone = () => {
       processed++;
-      if(processed==total){
-        if(errOccured)
-        return res.status(400).send(errOccured);
+      if (processed == total) {
+        if (errOccured)
+          return res.status(400).send(errOccured);
         res.send(resp);
       }
     }
@@ -103,11 +108,11 @@ module.exports = {
       });
     })
   },
-  addFeedback:(req,res)=>{
-    Users.update({email:req.user.email},{$push:{feedbacks:req.body.feedback}},(err)=>{
-      if(err)
-      return res.status(400).send(err);
-      res.json({'user':req.user});
+  addFeedback: (req, res) => {
+    Users.update({ email: req.user.email }, { $push: { feedbacks: req.body.feedback } }, (err) => {
+      if (err)
+        return res.status(400).send(err);
+      res.json({ 'user': req.user });
     })
   },
   toAuthJSON: (user) => {
@@ -117,7 +122,8 @@ module.exports = {
       image: user.image,
       name: user.name,
       referral_code: user.referral_code,
-      points: user.points
+      points: user.points,
+      all_details: user
     };
   },
   generateJWT: (user) => {

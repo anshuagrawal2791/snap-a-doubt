@@ -29,7 +29,12 @@ module.exports = (app, passport) => {
       if (!req.user) { return res.status(400).send(err); }
       res.send(userHandler.toAuthJSON(req.user));
     });
-
+  app.post('/tokensignin',(req,res)=>{
+    if(!req.body.email||!req.body.token){
+      return res.status(400).send('send email and token');
+      userHandler.tokenSignIn(req,res);
+    }
+  });
   app.get('/auth/check_token', (req, res) => {
     res.send('valid token');
   });
@@ -72,6 +77,8 @@ module.exports = (app, passport) => {
   app.put('/auth/user',(req,res)=>{
     userHandler.updateUser(req,res);
   });
+
+  
 
 };
 

@@ -14,7 +14,8 @@ const dev = {
     emailHost:'smtp.gmail.com',
     subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE'],
     fcmKey:process.env.FCM_KEY_DEV,
-    proxy:false
+    proxy:false,
+    FIREBASE_CLIENT_ID= process.env.FIREBASE_CLIENT_ID
   },
   db: {
     uri: process.env.DEV_DB_HOST || 'mongodb://localhost:27017/snap-a-doubt'
@@ -42,8 +43,8 @@ const test = {
     emailHost:'smtp.gmail.com',
     subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE'],
     fcmKey:process.env.FCM_KEY_TEST,
-    proxy:true
-
+    proxy:true,
+    FIREBASE_CLIENT_ID= process.env.FIREBASE_CLIENT_ID
   },
   db: {
     uri: process.env.TEST_DB_HOST || 'mongodb://localhost:27017/snap-a-doubt'
