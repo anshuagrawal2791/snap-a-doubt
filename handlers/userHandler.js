@@ -116,8 +116,6 @@ module.exports = {
       if (req.body.pin_code) user.pin_code = req.body.pin_code;
       if (req.body.address) user.address = req.body.address;
       if (req.body.password)user.password=req.body.password;
-
-      }
       user.save((err) => {
         if (err)
           return res.status(400).send(err);
