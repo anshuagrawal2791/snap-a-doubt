@@ -107,6 +107,17 @@ module.exports = {
         return res.status(400).send('no user found');
       if (req.body.fcm_token) user.fcm_token = req.body.fcm_token;
       if (req.body.name) user.name = req.body.name;
+      if (req.body.phone_number) user.phone_number= req.body.phone_number;
+      if (req.body.class) user.class = req.body.class;
+      if (req.body.school) user.school = req.body.school;
+      if (req.body.city) user.city = req.body.city;
+      if (req.body.parent_name) user.parent_name = req.body.parent_name;
+      if (req.body.alternate_phone_number) user.alternate_phone_number = req.body.alternate_phone_number;
+      if (req.body.pin_code) user.pin_code = req.body.pin_code;
+      if (req.body.address) user.address = req.body.address;
+      if (req.body.password)user.password=req.body.password;
+
+      }
       user.save((err) => {
         if (err)
           return res.status(400).send(err);
