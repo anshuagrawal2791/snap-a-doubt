@@ -14,7 +14,8 @@ const dev = {
     emailHost:'smtp.gmail.com',
     subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE'],
     fcmKey:process.env.FCM_KEY_DEV,
-    proxy:false
+    proxy:false,
+    demoBookingMessage:"Booking Confirmed"
     //FIREBASE_CLIENT_ID= process.env.FIREBASE_CLIENT_ID
   },
   db: {
@@ -43,7 +44,8 @@ const test = {
     emailHost:'smtp.gmail.com',
     subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE'],
     fcmKey:process.env.FCM_KEY_TEST,
-    proxy:true
+    proxy:true,
+    demoBookingMessage:"Booking Confirmed"
     //FIREBASE_CLIENT_ID= process.env.FIREBASE_CLIENT_ID
   },
   db: {

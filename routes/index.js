@@ -4,6 +4,7 @@ var path = process.cwd();
 var userHandler = require('../handlers/userHandler');
 var doubtHandler = require('../handlers/doubtHandler');
 var tutorHandler = require('../handlers/tutorHandler');
+var demoHandler = require('../handlers/demoHandler');
 const jwt = require('jsonwebtoken');
 const url = require('url');
 const multer = require('multer');
@@ -44,6 +45,9 @@ module.exports = (app, passport) => {
     console.log(req.files);
     console.log('insided /auth/doubt');
     doubtHandler.addDoubt(req, res);
+  });
+  app.post('/auth/demo',(req,res)=>{
+    demoHandler.add(req,res);
   });
   app.post('/auth/feedback',(req,res)=>{
     if(!req.body.feedback)
