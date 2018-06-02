@@ -6,6 +6,7 @@ var doubtHandler = require('../handlers/doubtHandler');
 var tutorHandler = require('../handlers/tutorHandler');
 var demoHandler = require('../handlers/demoHandler');
 var questionHandler = require('../handlers/questionHandler');
+var resultHandler = require('../handlers/resultHandler');
 const jwt = require('jsonwebtoken');
 const url = require('url');
 const multer = require('multer');
@@ -92,7 +93,9 @@ module.exports = (app, passport) => {
   app.post('/auth/get_questions',(req,res)=>{
     questionHandler.getQuestionsByModule(req,res);
   })
-
+  app.post('/auth/result',(req,res)=>{
+    resultHandler.addResult(req,res);
+  })
 };
 
 var verifyAdmin = function (req, res, next) {
