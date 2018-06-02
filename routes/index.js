@@ -89,6 +89,9 @@ module.exports = (app, passport) => {
   app.post('/auth/get_modules',(req,res)=>{
     questionHandler.getModules(req,res);
   })
+  app.post('/auth/get_questions',(req,res)=>{
+    questionHandler.getQuestionsByModule(req,res);
+  })
 
 };
 

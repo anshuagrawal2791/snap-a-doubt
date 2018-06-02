@@ -19,7 +19,7 @@ module.exports = {
         if(req.files&&(req.body.type==2||req.body.type==4)){ // check if image is there to upload
             uploadToS3.upload(req.files[0], fileId + '.jpg', (err, message) => {
                 if (err) {
-                  return res.status('400').send(err);
+                  return res.status(400).send(err);
                 }
                 deleteFolderRecursive.delete(Path, (found) => {
                 });
@@ -33,14 +33,23 @@ module.exports = {
     },
     getModules :(req,res)=>{
         if(!req.body.class||!req.body.subject)
-        return res.status('400').send('provide all parameters');
+        return res.status(400).send('provide all parameters');
         Questions.find({class:req.body.class,subject:req.body.subject},(err,resp)=>{
             if(err)
-            return res.status('400').send(err);
+            return res.status(400).send(err);
             var mods =[];
             for(response in resp)
                 mods.push(resp[response].module);
             res.send(mods);
+        })
+    },
+    getQuestionsByModule:(req,res)=>{
+        if(!req.body.module)
+        return res.status(400).send('please provide module number')
+        Questions.find({module:req.body.module},(err,resp)=>{
+            if(err)
+            return res.status(400).send(err);
+            res.send(resp);
         })
     }
 
