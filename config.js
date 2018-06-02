@@ -12,7 +12,7 @@ const dev = {
     emailId: process.env.EMAIL_ID_DEV,
     emailPassword: process.env.EMAIL_PASSWORD_DEV,
     emailHost:'smtp.gmail.com',
-    subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE'],
+    subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE','PDP'],
     fcmKey:process.env.FCM_KEY_DEV,
     proxy:false,
     demoBookingMessage:"Booking Confirmed"
@@ -42,7 +42,7 @@ const test = {
     emailId: process.env.EMAIL_ID_TEST,
     emailPassword: process.env.EMAIL_PASSWORD_TEST,
     emailHost:'smtp.gmail.com',
-    subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE'],
+    subjects: ['ENG', 'SST', 'SCI', 'MAT', 'PHY', 'BIO', 'CHE','PDP'],
     fcmKey:process.env.FCM_KEY_TEST,
     proxy:true,
     demoBookingMessage:"Booking Confirmed"

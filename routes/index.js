@@ -5,6 +5,7 @@ var userHandler = require('../handlers/userHandler');
 var doubtHandler = require('../handlers/doubtHandler');
 var tutorHandler = require('../handlers/tutorHandler');
 var demoHandler = require('../handlers/demoHandler');
+var questionHandler = require('../handlers/questionHandler');
 const jwt = require('jsonwebtoken');
 const url = require('url');
 const multer = require('multer');
@@ -82,7 +83,9 @@ module.exports = (app, passport) => {
   app.put('/auth/user',(req,res)=>{
     userHandler.updateUser(req,res);
   });
-
+  app.post('/tutor/question',uploads.array('photos', 12),verifyTutor,(req,res)=>{
+    questionHandler.addQuestion(req,res);
+  })
   
 
 };
