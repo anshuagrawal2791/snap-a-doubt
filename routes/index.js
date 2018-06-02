@@ -83,7 +83,7 @@ module.exports = (app, passport) => {
   app.put('/auth/user',(req,res)=>{
     userHandler.updateUser(req,res);
   });
-  app.post('/tutor/question',uploads.array('photos', 12),verifyTutor,(req,res)=>{
+  app.post('/tutor/question',uploads.array('image', 12),verifyTutor,(req,res)=>{
     questionHandler.addQuestion(req,res);
   })
   
