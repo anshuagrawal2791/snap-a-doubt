@@ -30,6 +30,18 @@ module.exports = {
             saveQuestionToDb(req, res, questionId,null);
 
         }
+    },
+    getModules :(req,res)=>{
+        if(!req.body.class||!req.body.subject)
+        return res.status('400').send('provide all parameters');
+        Questions.find({class:req.body.class,subject:req.body.subject},(err,resp)=>{
+            if(err)
+            return res.status('400').send(err);
+            var mods =[];
+            for(response in resp)
+                mods.push(resp[response].module);
+            res.send(mods);
+        })
     }
 
   

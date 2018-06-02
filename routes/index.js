@@ -86,7 +86,9 @@ module.exports = (app, passport) => {
   app.post('/tutor/question',uploads.array('image', 12),verifyTutor,(req,res)=>{
     questionHandler.addQuestion(req,res);
   })
-  
+  app.post('/auth/get_modules',(req,res)=>{
+    questionHandler.getModules(req,res);
+  })
 
 };
 
