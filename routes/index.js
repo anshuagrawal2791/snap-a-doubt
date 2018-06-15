@@ -7,6 +7,7 @@ var tutorHandler = require('../handlers/tutorHandler');
 var demoHandler = require('../handlers/demoHandler');
 var questionHandler = require('../handlers/questionHandler');
 var resultHandler = require('../handlers/resultHandler');
+var blogHandler = require('../handlers/blogHandler');
 const jwt = require('jsonwebtoken');
 const url = require('url');
 const multer = require('multer');
@@ -95,6 +96,9 @@ module.exports = (app, passport) => {
   })
   app.post('/auth/result',(req,res)=>{
     resultHandler.addResult(req,res);
+  })
+  app.post('/blogs',(req,res)=>{
+    blogHandler.getBlogs(req,res);
   })
 };
 
