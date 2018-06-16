@@ -100,7 +100,7 @@ module.exports = (app, passport) => {
   app.post('/blogs',(req,res)=>{
     blogHandler.getBlogs(req,res);
   })
-  app.post('/blogs/add',(req,res)=>{
+  app.post('/blogs/add',uploads.array('image', 12),(req,res)=>{
     blogHandler.addBlog(req,res);
   })
 };

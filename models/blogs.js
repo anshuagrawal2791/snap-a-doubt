@@ -9,7 +9,7 @@ var Blog = new Schema({
   image_link: {type: String},
   description:{type:String,required:true},
   type:{type:Number,default:0},
-  tags:{type:String},
+  tags:{type:[String]},
   created_at: {
     type: Date,
     default: Date.now

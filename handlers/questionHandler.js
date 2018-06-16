@@ -16,7 +16,7 @@ module.exports = {
         var questionId=shortid.generate();
         var fileId = questionId + '-com-' + shortid.generate();
         console.log('here')
-        if(req.files&&(req.body.type==2||req.body.type==4)){ // check if image is there to upload
+        if(req.files.length>0&&(req.body.type==2||req.body.type==4)){ // check if image is there to upload
             uploadToS3.upload(req.files[0], fileId + '.jpg', (err, message) => {
                 if (err) {
                   return res.status(400).send(err);
