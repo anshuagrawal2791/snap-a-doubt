@@ -8,6 +8,8 @@ var Result = new Schema({
   total:{type:Number,required:true},
   attempted:{type:Number,required:true},
   correct:{type:Number,required:true},
+  questions:{type:[String],required:true},
+  responses:{type:[String],required:true},
   created_at: {
     type: Date,
     default: Date.now

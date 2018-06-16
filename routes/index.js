@@ -100,6 +100,9 @@ module.exports = (app, passport) => {
   app.post('/blogs',(req,res)=>{
     blogHandler.getBlogs(req,res);
   })
+  app.post('/blogs/add',(req,res)=>{
+    blogHandler.addBlog(req,res);
+  })
 };
 
 var verifyAdmin = function (req, res, next) {
