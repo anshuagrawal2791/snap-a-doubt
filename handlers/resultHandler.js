@@ -13,13 +13,10 @@ module.exports = {
         ques=[];
         responses=JSON.parse(req.body.responses);
         questions=JSON.parse(req.body.questions)
-        console.log(responses.length)
         for (i=0;i<responses.length;i++){
-            console.log(i)
             resps.push(responses[i])
             ques.push(questions[i])
         }
-        console.log(resps)
         var newResult = new Results({
          id:resultId,
          user_email : userId,
