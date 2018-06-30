@@ -8,6 +8,7 @@ var demoHandler = require('../handlers/demoHandler');
 var questionHandler = require('../handlers/questionHandler');
 var resultHandler = require('../handlers/resultHandler');
 var blogHandler = require('../handlers/blogHandler');
+var reqHandler = require('../handlers/requestHandler');
 const jwt = require('jsonwebtoken');
 const url = require('url');
 const multer = require('multer');
@@ -102,6 +103,30 @@ module.exports = (app, passport) => {
   })
   app.post('/blogs/add',uploads.array('image', 12),(req,res)=>{
     blogHandler.addBlog(req,res);
+  })
+  app.post('/tutor/login',verifyTutor,(req,res)=>{
+    tutorHandler.login(req,res)
+  })
+  app.post('/tutor/update',verifyTutor,(req,res)=>{
+    tutorHandler.update(req,res)
+  })
+  app.post('/tutor/assign_student',verifyTutor,(req,res)=>[
+    tutorHandler.assign_student(req,res)
+  ])
+  app.post('/tutor/assign_classes_and_subject',verifyTutor,(req,res)=>{
+    tutorHandler.assign_classes_and_student(req,res)
+  })
+  app.post('/admin/approve',verifyAdmin,(req,res)=>[
+    reqHandler.approve(req,res)
+  ])
+  app.post('/tutor/get_students',verifyTutor,(req,res)=>{
+    tutorHandler.get_students(req,res)
+  })
+  app.post('/tutor/submit_test',verifyTutor,(req,res)=>{
+    tutorHandler.submit_test(req,res)
+  })
+  app.post('/tutor/get_tests',verifyTutor,(req,res)=>{
+    tutorHandler.get_tests(req,res)
   })
 };
 

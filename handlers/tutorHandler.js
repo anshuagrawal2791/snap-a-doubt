@@ -1,6 +1,8 @@
 
 var Tutors = require('../models/tutors');
 var Users = require('../models/users');
+var Requests = require('../models/requests')
+var TestResults = require('../models/test_results')
 var configs = require('../config');
 var jwt = require('jsonwebtoken');
 const shortid = require('shortid');
@@ -14,7 +16,119 @@ var sendNotif = require('../utils/sendNotif');
 const mailer = require('../utils/mailer');
 const rand = require('csprng');
 module.exports = {
+  login: (req, res) => {
+    if (!req.body.fcm) {
+      return res.status(400).send('please provide fcm key')
+    }
+    Tutors.findOne({ email: req.user.email }, function (err, tutor) {
+      //console.log(tutor);
+      if (err) { res.status(403).send('unauthorized'); }
+      if (!tutor) {
+        return res.status(403).send('no tutor found');
+      }
+      tutor.fcm = req.body.fcm
+      tutor.save((err) => {
+        if (err) {
+          return res.status(400).send('error while saving fcm token')
+        }
+        return res.json(tutor)
+      })
+    })
+  },
+  update: (req, res) => {
+    if (req.body.phone_number)
+      req.user.phone_number = req.body.phone_number
+    if (req.body.new_password)
+      req.user.password = req.body.new_password
+    if (req.body.fcm)
+      req.user.fcm = req.body.fcm
+    if (req.body.name)
+      req.user.name = req.body.name
+    req.user.save((err) => {
+      if (err) { res.status(403).send(err); }
+      return res.json(req.user)
+    })
+  },
+  assign_student: (req, res) => {
+    if (!req.body.student_email)
+      return res.send('please enter student email')
+    Users.findOne({ email: req.body.student_email }, (err, user) => {
+      if (err)
+        return res.status(400).send(err)
+      if (!user)
+        return res.status(400).send('no student found')
+      else {
+        var reqId = 'REQ-1-' + shortid.generate()
+        var newReq = new Requests({
+          id: reqId,
+          type: 1,
+          student_email: req.body.student_email,
+          tutor_email: req.user.email
+        })
+        newReq.save((err) => {
+          if (err)
+            return res.status(400).send('error creating request')
+          return res.json(newReq)
+        })
+      }
+    })
+  },
+  assign_classes_and_student:(req,res)=>{
+   if(!req.body.classes)
+   return res.status(400).send('please enter classes')
+   if(!req.body.subject)
+   return res.status(400).send('please enter subject')
+   var reqId = 'REQ-2-' + shortid.generate()
+   var newReq = new Requests({
+    id:reqId,
+    type:2,
+    tutor_email:req.user.email,
+    tutor_subject:req.body.subject
+   })
+   var classes = JSON.parse(req.body.classes);
+   for (let cl in classes){
+     newReq.tutor_classes.push(classes[cl])
+   }
+   newReq.save((err)=>{
+     if(err)
+     return res.status(400).send(err)
+     return res.json(newReq)
+   })
+  },
+  get_students : (req,res)=>{
+    Tutors.findOne({email:req.user.email},(err,tutor)=>{
+      if(err)
+      return res.status(400).send(err)
+      return res.json({'students':tutor.students})
+    })
+  },
+  submit_test : (req,res)=>{
+    if(!req.body.score||!req.body.total||!req.body.retention_rate||!req.body.student_email)
+    return res.status(400).send('please fill all the details')
+    if(!req.user.students.includes(req.body.student_email))
+    return res.status(403).send('not authorized to submit this student\'s data. Assign student first')
+    var testId = 'TEST-'+shortid.generate()
+    var newTestRes = new TestResults({
+      id:testId,
+      student_email : req.body.student_email,
+      score:req.body.score,
+      total:req.body.total,
+      retention_rate:req.body.retention_rate
+    })
+    newTestRes.save((err)=>{
+      if(err)
+      return res.status(400).send(err)
+      res.json(newTestRes)
+    })
 
+  },
+  get_tests : (req,res)=>{
+    TestResults.find({student_email:{ $in: req.user.students }},(err,resp)=>{
+      if(err)
+      return res.status(400).send(err)
+      res.json(resp)
+    })
+  },
   addTutor: (req, res) => {
     var classes = JSON.parse(req.body.classes);
     var newTutor = new Tutors({
@@ -56,7 +170,7 @@ module.exports = {
     Sols.findOne({ id: solId }, (err, sol) => {
       if (err)
         return res.status(400).send(err);
-      if (req.body.correct=='true') {
+      if (req.body.correct == 'true') {
         sol.verified = true;
         sol.save((err) => {
           if (err)
@@ -77,27 +191,27 @@ module.exports = {
           });
         })
       } else {
-        sol.verified=false;
-        sol.save((err)=>{
-          if(err)
-          return res.status(400).send(err);
+        sol.verified = false;
+        sol.save((err) => {
+          if (err)
+            return res.status(400).send(err);
           Tutors.findOne({ sols: solId }, (err, tutor) => {
             if (err)
               return res.status(400).send(err);
-            else if(!tutor){
+            else if (!tutor) {
               return res.status(400).send('couldn\'t find tutor who solved this');
             }
-            else{
-              mailer.mail(tutor.email, { sol: sol,'remarks':req.body.remarks}, 'Solution Rejected', (err, resp) => {
+            else {
+              mailer.mail(tutor.email, { sol: sol, 'remarks': req.body.remarks }, 'Solution Rejected', (err, resp) => {
                 if (err)
-                return res.status(400).send(err)
-                res.json({'sentTo: ':tutor,'sol':sol});
-  
+                  return res.status(400).send(err)
+                res.json({ 'sentTo: ': tutor, 'sol': sol });
+
               })
             }
           });
         })
-        
+
       }
     })
   }

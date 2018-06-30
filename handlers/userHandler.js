@@ -24,23 +24,7 @@ module.exports = {
       fcm_token: req.body.fcm_token
 
     });
-
-    if (req.body.referral_code) {
-      Users.findOne({ referral_code: req.body.referral_code }, (err, user) => {
-        if (!err && user) {
-          user.points += config.app.referralReward1;
-          user.save((err) => {
-            console.log(err);
-          });
-          newUser.points += config.app.referralReward2;
-          saveUserToDb(req, res, newUser);
-        } else {
-          saveUserToDb(req, res, newUser);
-        }
-      });
-    } else {
-      saveUserToDb(req, res, newUser);
-    }
+    saveUserToDb(req,res,newUser)
   },
   tokenSignIn: (req,res) => {
     Users.findOne({'email':req.body.email},(err,user)=>{
@@ -149,6 +133,31 @@ module.exports = {
 saveUserToDb = (req, res, newUser) => {
   newUser.save((err) => {
     if (err) { return res.status('400').send(err.errmsg); }
+    addRewards(req,res,newUser)
     res.send(newUser.toAuthJSON());
   });
 };
+addRewards = (req,res,newUser)=>{
+  if (req.body.referral_code) {
+    Users.findOne({ referral_code: req.body.referral_code }, (err, user) => {
+      if (!err && user) {
+        user.points += config.app.referralReward1;
+        user.save((err) => {
+          console.log(err);
+        });
+        newUser.points += config.app.referralReward2;
+        newUser.save((err)=>{
+          console.log(err)
+        });
+      } else {
+        newUser.save((err)=>{
+          console.log(err)
+        });
+      }
+    });
+  } else {
+    newUser.save((err)=>{
+      console.log(err)
+    });
+  }
+}
