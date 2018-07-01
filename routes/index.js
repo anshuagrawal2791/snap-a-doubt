@@ -146,6 +146,12 @@ module.exports = (app, passport) => {
   }]),verifyTutor,(req,res)=>{
     lecturePlanHandler.addLecturePlan(req,res)
   })
+  app.post('/tutor/get_lecture_plan',verifyTutor,(req,res)=>{
+    lecturePlanHandler.getLec(req,res)
+  })
+  app.post('/tutor/get_lecture_plan_by_id',verifyTutor,(req,res)=>{
+    lecturePlanHandler.getLecById(req,res)
+  })
   
 };
 

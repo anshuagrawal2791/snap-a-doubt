@@ -11,6 +11,24 @@ const deleteFolderRecursive = require('../utils/deleteDirectoryContent');
 const NUM_IMAGES = 7
 const IMAGES = ['image_introduction', 'image_hw_teachers', 'image_points', 'image_flow', 'image_helper', 'image_example', 'image_exercise']
 module.exports = {
+    getLec:(req,res)=>{
+        if(!req.body.class||!req.body.subject)
+        return res.status(400).send('fill all the details')
+        LecturePlans.find({class:req.body.class,subject:req.body.subject},(err,resp)=>{
+            if(err)
+            return res.status(400).send(err)
+            res.json(resp)
+        })
+    },
+    getLecById:(req,res)=>{
+        if(!req.body.lecture_plan_id)
+        return res.status(400).send('please fill lecture id')
+        LecturePlans.findOne({id:req.body.lecture_plan_id},(err,resp)=>{
+            if(err)
+            return res.status(400).send(err)
+            return res.json(resp)
+        })
+    },
     addLecturePlan: (req, res) => {
         console.log(req.files)
 
@@ -51,7 +69,12 @@ module.exports = {
             if (image_c==0){
                 deleteFolderRecursive.delete(Path, (found) => {
                 });
-                return res.json(newLec)
+                newLec.save((err)=>{
+                    if(err)
+                    return res.status(400).send(err)
+                    return res.json(newLec)
+                })
+                
             }
 
         }
