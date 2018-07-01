@@ -9,6 +9,7 @@ var questionHandler = require('../handlers/questionHandler');
 var resultHandler = require('../handlers/resultHandler');
 var blogHandler = require('../handlers/blogHandler');
 var reqHandler = require('../handlers/requestHandler');
+var lecturePlanHandler = require('../handlers/lecturePlanHandler');
 const jwt = require('jsonwebtoken');
 const url = require('url');
 const multer = require('multer');
@@ -128,6 +129,24 @@ module.exports = (app, passport) => {
   app.post('/tutor/get_tests',verifyTutor,(req,res)=>{
     tutorHandler.get_tests(req,res)
   })
+  app.post('/tutor/lecture_plan/create',uploads.fields([{
+    name: 'image_introduction', maxCount: 1
+  }, {
+    name: 'image_hw_teachers', maxCount: 1
+  },{
+    name: 'image_flow', maxCount: 1
+  },{
+    name: 'image_helper', maxCount: 1
+  },{
+    name: 'image_points', maxCount: 1
+  },{
+    name: 'image_exercise', maxCount: 1
+  },{
+    name: 'image_example', maxCount: 1
+  }]),verifyTutor,(req,res)=>{
+    lecturePlanHandler.addLecturePlan(req,res)
+  })
+  
 };
 
 var verifyAdmin = function (req, res, next) {
@@ -143,7 +162,7 @@ var verifyAdmin = function (req, res, next) {
   }
 };
 var verifyTutor = function(req,res,done){
-  //console.log(req.body);
+  // console.log(req.body.email);
   Tutors.findOne({email:req.body.email},function(err,tutor){
     //console.log(tutor);
     if (err) { res.status(403).send('unauthorized'); }
