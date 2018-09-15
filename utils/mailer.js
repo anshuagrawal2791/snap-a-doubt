@@ -30,12 +30,12 @@ module.exports.mail = (recipient, data,subject, cb) => {
   // to test
   //recipient='anshuagrawal2791@gmail.com';
   var mailOptions = {
-    from: 'support@vegatva.com',
+    from: configs.app.emailId,
     to: recipient,
     subject: subject,
     text: JSON.stringify(data)
   };
-  console.log(recipient);
+  console.log(mailOptions);
   transporter.sendMail(mailOptions, function (error, info) {
     console.log('inside send mail')
     console.log(error);

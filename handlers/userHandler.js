@@ -4,6 +4,8 @@ var Sols = require('../models/sols');
 var config = require('../config');
 var jwt = require('jsonwebtoken');
 var Doubts = require('../models/doubts');
+const mailer = require('../utils/mailer');
+
 module.exports = {
 
   addUser: (req, res) => {
@@ -111,7 +113,11 @@ module.exports = {
     Users.update({ email: req.user.email }, { $push: { feedbacks: req.body.feedback } }, (err) => {
       if (err)
         return res.status(400).send(err);
-      res.json({ 'user': req.user });
+      mailer.mail(config.app.emailId,{feedback:req.body.feedback, user: req.user},'New Feedback', (err, resp) => {
+        console.log(resp)
+        console.log(err)
+        res.json({ 'user': req.user });
+      });
     })
   },
   toAuthJSON: (user) => {
