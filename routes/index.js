@@ -115,7 +115,7 @@ module.exports = (app, passport) => {
     tutorHandler.assign_student(req,res)
   ])
   app.post('/tutor/assign_classes_and_subject',verifyTutor,(req,res)=>{
-    tutorHandler.assign_classes_and_student(req,res)
+    tutorHandler.assign_classes_and_subject(req,res)
   })
   app.post('/admin/approve',verifyAdmin,(req,res)=>[
     reqHandler.approve(req,res)

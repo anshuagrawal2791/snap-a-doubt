@@ -17,16 +17,15 @@ const mailer = require('../utils/mailer');
 const rand = require('csprng');
 module.exports = {
   login: (req, res) => {
-    if (!req.body.fcm) {
-      return res.status(400).send('please provide fcm key')
-    }
     Tutors.findOne({ email: req.user.email }, function (err, tutor) {
       //console.log(tutor);
       if (err) { res.status(403).send('unauthorized'); }
       if (!tutor) {
         return res.status(403).send('no tutor found');
       }
-      tutor.fcm = req.body.fcm
+      if (req.body.fcm){
+        tutor.fcm = req.body.fcm
+      }
       tutor.save((err) => {
         if (err) {
           return res.status(400).send('error while saving fcm token')
@@ -73,7 +72,7 @@ module.exports = {
       }
     })
   },
-  assign_classes_and_student:(req,res)=>{
+  assign_classes_and_subject:(req,res)=>{
    if(!req.body.classes)
    return res.status(400).send('please enter classes')
    if(!req.body.subject)

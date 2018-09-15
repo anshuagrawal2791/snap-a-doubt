@@ -49,7 +49,7 @@ const test = {
     //FIREBASE_CLIENT_ID= process.env.FIREBASE_CLIENT_ID
   },
   db: {
-    uri: process.env.TEST_DB_HOST || 'mongodb://localhost:27017/snap-a-doubt'
+    uri: process.env.DEV_DB_HOST || 'mongodb://localhost:27017/snap-a-doubt'
 
   },
   aws: {
