@@ -10,6 +10,7 @@ var resultHandler = require('../handlers/resultHandler');
 var blogHandler = require('../handlers/blogHandler');
 var reqHandler = require('../handlers/requestHandler');
 var lecturePlanHandler = require('../handlers/lecturePlanHandler');
+var parentHandler = require('../handlers/parentHandler');
 const jwt = require('jsonwebtoken');
 const url = require('url');
 const multer = require('multer');
@@ -20,6 +21,7 @@ var Tutors = require('../models/tutors');
 var configs = require('../config');
 module.exports = (app, passport) => {
   app.use('/auth', passport.authenticate('jwt', {session: false}));
+  app.use('/parent-auth', passport.authenticate('parent_jwt', {session: false}));
   app.use('/admin', verifyAdmin);
   app.get('/', (req, res) => {
     res.send('ok');
@@ -115,7 +117,7 @@ module.exports = (app, passport) => {
     tutorHandler.assign_student(req,res)
   ])
   app.post('/tutor/assign_classes_and_subject',verifyTutor,(req,res)=>{
-    tutorHandler.assign_classes_and_subject(req,res)
+    tutorHandler.assign_classes_and_subj(req,res)
   })
   app.post('/admin/approve',verifyAdmin,(req,res)=>[
     reqHandler.approve(req,res)
@@ -152,7 +154,24 @@ module.exports = (app, passport) => {
   app.post('/tutor/get_lecture_plan_by_id',verifyTutor,(req,res)=>{
     lecturePlanHandler.getLecById(req,res)
   })
-  
+  app.post('/parent/register',(req,res)=>{
+    parentHandler.addParent(req,res)
+  })
+  app.post('/parent/login',
+    passport.authenticate('parent', { session: false }),
+    function (req, res) {
+      if (!req.user) { return res.status(400).send(err); }
+      if (req.body.fcm_token){
+        parentHandler.updateFcm(req)
+      }
+      res.send(parentHandler.toAuthJSON(req.user));
+    });
+  app.get('/parent-auth/check_token', (req, res) => {
+    res.send(req.user);
+  })
+  app.post('/parent-auth/update',(req,res)=>{
+    parentHandler.updateParent(req,res)
+  })
 };
 
 var verifyAdmin = function (req, res, next) {
