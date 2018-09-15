@@ -1,6 +1,7 @@
 
 var Tutors = require('../models/tutors');
 var Users = require('../models/users');
+var Parents= require('../models/parents');
 var Requests = require('../models/requests')
 var TestResults = require('../models/test_results')
 var configs = require('../config');
@@ -118,7 +119,23 @@ module.exports = {
     newTestRes.save((err)=>{
       if(err)
       return res.status(400).send(err)
-      res.json(newTestRes)
+      Parents.findOne({student: req.body.student_email},(err,parent)=>{
+        if (err)
+          return res.status(400).send(err)
+        else{
+          if (parent && parent.fcm_token){
+            sendNotif.send('Test Result', 'New test result posted for your child', parent.fcm_token, newTestRes, (err, resp) => {
+              console.log(resp)
+              console.log(err)
+              res.json(newTestRes)
+            });
+          }
+          else{
+            res.json(newTestRes)
+          }
+        }
+
+      })
     })
 
   },
