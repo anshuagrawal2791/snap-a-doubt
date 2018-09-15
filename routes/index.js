@@ -172,6 +172,9 @@ module.exports = (app, passport) => {
   app.post('/parent-auth/update',(req,res)=>{
     parentHandler.updateParent(req,res)
   })
+  app.post('/admin/assign-student-to-parent',verifyAdmin,(req,res)=>[
+    parentHandler.assign_student(req,res)
+  ])
 };
 
 var verifyAdmin = function (req, res, next) {
