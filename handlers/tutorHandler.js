@@ -102,7 +102,7 @@ module.exports = {
     })
   },
   submit_test : (req,res)=>{
-    if(!req.body.score||!req.body.total||!req.body.retention_rate||!req.body.student_email)
+    if(!req.body.score||!req.body.total||!req.body.retention_rate||!req.body.student_email||!req.body.subject)
     return res.status(400).send('please fill all the details')
     if(!req.user.students.includes(req.body.student_email))
     return res.status(403).send('not authorized to submit this student\'s data. Assign student first')
@@ -112,7 +112,8 @@ module.exports = {
       student_email : req.body.student_email,
       score:req.body.score,
       total:req.body.total,
-      retention_rate:req.body.retention_rate
+      retention_rate:req.body.retention_rate,
+      subject: req.body.subject
     })
     newTestRes.save((err)=>{
       if(err)

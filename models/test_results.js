@@ -7,6 +7,7 @@ var TestResult = new Schema({
   score:{type:Number,required:true},
   total:{type:Number,required:true},
   retention_rate:{type:String,required:true},
+  subject: {type: String, enum: configs.app.subjects},
   created_at: {
     type: Date,
     default: Date.now
