@@ -37,17 +37,35 @@ module.exports = {
   },
   update: (req, res) => {
     if (req.body.phone_number)
-      req.user.phone_number = req.body.phone_number
+      req.user.phone_number = req.body.phone_number;
     if (req.body.new_password)
       req.user.password = req.body.new_password
     if (req.body.fcm)
-      req.user.fcm = req.body.fcm
+      req.user.fcm = req.body.fcm;
     if (req.body.name)
-      req.user.name = req.body.name
-    req.user.save((err) => {
-      if (err) { res.status(403).send(err); }
-      return res.json(req.user)
-    })
+      req.user.name = req.body.name;
+
+    if(req.files.length>0){ // check if image is there to upload
+        let fileId = req.user.id+'-com-'+shortid.generate();
+        uploadToS3.upload(req.files[0], fileId + '.jpg', (err, message) => {
+            if (err) {
+                return res.status(400).send(err);
+            }
+            deleteFolderRecursive.delete(Path, (found) => {
+            });
+            req.user.image = configs.aws.bucketBaseUri+fileId+'.jpg'
+            req.user.save((err) => {
+                if (err) { res.status(403).send(err); }
+                return res.json(req.user)
+            })
+        });
+
+    }else{
+        req.user.save((err) => {
+            if (err) { res.status(403).send(err); }
+            return res.json(req.user)
+        })
+      }
   },
   assign_student: (req, res) => {
     if (!req.body.student_email)

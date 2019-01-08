@@ -11,29 +11,30 @@ var crypto = require('crypto');
 var configs = require('../config');
 var Tutor = new Schema({
 
-  phone_number: String,
-  email: { type: String, unique: true, index: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'] },
-  password: { type: String,required:true},
-  fcm : {type : String},
-  level: {type: Number, required: true},
-  name: String,
-  classes: { type: [Number]},
-  students:{type:[String]},
-  last_posted: {type:Date,default:new Date()},
-  solved_today: {type: Number, default: 0},
-  received_today:{type:Number,default:0},
-  last_received:{type:Date,default:new Date()},
-  verified_today:{type:Number,default:0},
-  created_at: {
-    type: Date,
-    default: Date.now
-  },
-  sols:{type:[String]},
-  verified_sols:{type:[String]},
-  doubts:{type:[String]},
-  modified_at: Date,
-  subject: {type: String, enum: configs.app.subjects},
-  available: {type: Boolean, default: true}
+    phone_number: String,
+    email: { type: String, unique: true, index: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'] },
+    password: { type: String,required:true},
+    fcm : {type : String},
+    level: {type: Number, required: true},
+    image: { type: String, default: 'http://static.bleacherreport.net/images/redesign/avatars/default-user-icon-profile.png' },
+    name: String,
+    classes: { type: [Number]},
+    students:{type:[String]},
+    last_posted: {type:Date,default:new Date()},
+    solved_today: {type: Number, default: 0},
+    received_today:{type:Number,default:0},
+    last_received:{type:Date,default:new Date()},
+    verified_today:{type:Number,default:0},
+    created_at: {
+      type: Date,
+      default: Date.now
+    },
+    sols:{type:[String]},
+    verified_sols:{type:[String]},
+    doubts:{type:[String]},
+    modified_at: Date,
+    subject: {type: String, enum: configs.app.subjects},
+    available: {type: Boolean, default: true}
 });
 
 // Middlewares

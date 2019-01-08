@@ -110,7 +110,7 @@ module.exports = (app, passport) => {
   app.post('/tutor/login',verifyTutor,(req,res)=>{
     tutorHandler.login(req,res)
   })
-  app.post('/tutor/update',verifyTutor,(req,res)=>{
+  app.post('/tutor/update', uploads.array('image', 12),verifyTutor,(req,res)=>{
     tutorHandler.update(req,res)
   })
   app.post('/tutor/assign_student',verifyTutor,(req,res)=>[
@@ -190,7 +190,7 @@ var verifyAdmin = function (req, res, next) {
   }
 };
 var verifyTutor = function(req,res,done){
-  // console.log(req.body.email);
+  console.log(req.body.email);
   Tutors.findOne({email:req.body.email},function(err,tutor){
     //console.log(tutor);
     if (err) { res.status(403).send('unauthorized'); }
