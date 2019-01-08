@@ -37,7 +37,6 @@ module.exports = {
             return res.status(400).send("fill all the required fields")
         var blogId = shortid.generate();
         var fileId = blogId+'-com-'+shortid.generate();
-        console.log(req.files)
         if(req.files.length>0){ // check if image is there to upload
             uploadToS3.upload(req.files[0], fileId + '.jpg', (err, message) => {
                 if (err) {

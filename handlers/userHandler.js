@@ -4,7 +4,14 @@ var Sols = require('../models/sols');
 var config = require('../config');
 var jwt = require('jsonwebtoken');
 var Doubts = require('../models/doubts');
+const shortid = require('shortid');
+shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@');
 const mailer = require('../utils/mailer');
+const uploadToS3 = require('../utils/uploadToS3');
+const deleteFolderRecursive = require('../utils/deleteDirectoryContent');
+const path = require('path');
+var Path = path.join(__dirname, '../uploads');
+
 
 module.exports = {
 
@@ -102,11 +109,30 @@ module.exports = {
       if (req.body.pin_code) user.pin_code = req.body.pin_code;
       if (req.body.address) user.address = req.body.address;
       if (req.body.password)user.password=req.body.password;
-      user.save((err) => {
-        if (err)
-          return res.status(400).send(err);
-        res.send(user.toAuthJSON());
-      });
+      if(req.files.length>0){ // check if image is there to upload
+          let fileId = user.id+'-com-'+shortid.generate();
+          uploadToS3.upload(req.files[0], fileId + '.jpg', (err, message) => {
+              if (err) {
+                  return res.status(400).send(err);
+              }
+              deleteFolderRecursive.delete(Path, (found) => {
+              });
+              user.image = config.aws.bucketBaseUri+fileId+'.jpg'
+              user.save((err) => {
+                  if (err)
+                      return res.status(400).send(err);
+                  res.send(user.toAuthJSON());
+              });
+          });
+
+      }else{
+        user.save((err) => {
+          if (err)
+              return res.status(400).send(err);
+          res.send(user.toAuthJSON());
+        });
+      }
+
     })
   },
   addFeedback: (req, res) => {

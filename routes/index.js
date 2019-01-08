@@ -86,7 +86,7 @@ module.exports = (app, passport) => {
     return res.status(400).send('enter if the solution is correct');
     tutorHandler.verifySol(req,res);
   });
-  app.put('/auth/user',(req,res)=>{
+  app.put('/auth/user',uploads.array('image', 12), (req,res)=>{
     userHandler.updateUser(req,res);
   });
   app.post('/tutor/question',uploads.array('image', 12),verifyTutor,(req,res)=>{
