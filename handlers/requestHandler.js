@@ -17,7 +17,7 @@ module.exports = {
             if (!request)
                 return res.status(400).send('no request found')
             if(request.approved)
-                return res.status(200).send('already approved')
+                return res.status(400).send('already approved')
             if (request.type == 1) {
                 assignStudentToTutor(req, res, request)
             } else if (request.type == 2) {
@@ -33,7 +33,7 @@ assignStudentToTutor = (req, res, request) => {
     Tutors.update({ email: request.tutor_email }, { $addToSet: { students: request.student_email } }, (err, resp) => {
         if (err)
             return res.status(400).send(err)
-        request.approved = true
+        request.approved = true;
         request.save((err) => {
             if (err)
                 return res.status(400).send(err)
@@ -41,9 +41,8 @@ assignStudentToTutor = (req, res, request) => {
                 sendNotif.send('Request Approved', 'Student added to your account', tutor.fcm, null, (err, resp) => {
                     if (err){
                         console.log(err)
-                        return res.status(400).json({'error':err,'tutor':tutor,'success':true});
                     }
-                    return res.status(400).json({'resp':resp,'tutor':tutor,'success':true});
+                    return res.status(200).json({'resp':resp,'err':err,'tutor':tutor,'success':true});
                 });
             })
             

@@ -117,7 +117,7 @@ module.exports = (app, passport) => {
     tutorHandler.assign_student(req,res)
   ])
   app.post('/tutor/assign_classes_and_subject',verifyTutor,(req,res)=>{
-    tutorHandler.assign_classes_and_subj(req,res)
+    tutorHandler.assign_classes_and_subject(req,res)
   })
   app.post('/admin/approve',verifyAdmin,(req,res)=>[
     reqHandler.approve(req,res)
@@ -175,6 +175,9 @@ module.exports = (app, passport) => {
   app.post('/admin/assign-student-to-parent',verifyAdmin,(req,res)=>[
     parentHandler.assign_student(req,res)
   ])
+  app.post('/auth/schedule-class',(req,res)=>{
+    userHandler.scheduleClass(req,res)
+  })
 };
 
 var verifyAdmin = function (req, res, next) {

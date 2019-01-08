@@ -183,6 +183,7 @@ module.exports = {
     });
   },
   clearReceivedToday: () => {
+    console.log('clearing received today')
     Tutors.update({ level: { $in: [0, 1, 2] } }, { $set: { received_today: 0, solved_today: 0, verfied_today: 0 } }, { multi: true }, (err, numAffected) => {
       console.log(JSON.stringify(numAffected) + ' are updated');
     })

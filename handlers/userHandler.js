@@ -4,6 +4,7 @@ var Sols = require('../models/sols');
 var config = require('../config');
 var jwt = require('jsonwebtoken');
 var Doubts = require('../models/doubts');
+var Classes = require('../models/classes');
 const shortid = require('shortid');
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@');
 const mailer = require('../utils/mailer');
@@ -11,6 +12,7 @@ const uploadToS3 = require('../utils/uploadToS3');
 const deleteFolderRecursive = require('../utils/deleteDirectoryContent');
 const path = require('path');
 var Path = path.join(__dirname, '../uploads');
+var sendNotif = require('../utils/sendNotif');
 
 
 module.exports = {
@@ -160,7 +162,55 @@ module.exports = {
   generateJWT: (user) => {
     const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_KEY);
     return token;
+  },
+  scheduleClass: (req, res)=>{
+    user = req.user
+    if(!req.body.tutor_email)
+        return res.status(400).send('missing tutor email');
+    if(!req.body.scheduled_for)
+        return res.status(400).send('missing scheduled date');
+
+    try{
+        scheduled_date = new Date(req.body.scheduled_for)
+    }catch (e) {
+        return res.status(400).send(e);
+    }
+    var newClass = new Classes({
+        id:'CLASS-' + shortid.generate(),
+        student_email: user.email,
+        tutor_email: req.body.tutor_email,
+        scheduled_for: scheduled_date
+    });
+    newClass.save((err)=>{
+        if(err)
+            return res.status(400).send(err);
+        return res.status(200).json({'class': newClass})
+    })
+  },
+  sendClassNotifications: ()=>{
+    console.log('sending class notifications')
+    var cur_time = new Date()
+    var one_hour_later = new Date()
+    one_hour_later.setHours(one_hour_later.getHours() + 1);
+    Classes.find({scheduled_for: {$gte: cur_time, $lte: one_hour_later}}, (err, classes)=>{
+      classes.forEach((klass)=>{
+        Users.findOne({email: klass.student_email}, (err, student)=>{
+          if(err) {
+            console.log(err)
+            return;
+          }
+          sendNotif.send('Class Reminder', 'Your class is about to start', student.fcm, null, (err, resp) => {
+            if (err){
+              console.log('error sending notification to: '+ student.email)
+              console.log(err)
+            }else
+              console.log('notification sent to: '+ student.email)
+          });
+        })
+      })
+    })
   }
+
 };
 saveUserToDb = (req, res, newUser) => {
   newUser.save((err) => {
