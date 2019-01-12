@@ -171,7 +171,7 @@ module.exports = {
         return res.status(400).send('missing scheduled date');
 
     try{
-        scheduled_date = new Date(req.body.scheduled_for)
+        var scheduled_date = new Date(req.body.scheduled_for)
     }catch (e) {
         return res.status(400).send(e);
     }
