@@ -2,8 +2,10 @@
 var Tutors = require('../models/tutors');
 var Users = require('../models/users');
 var Parents= require('../models/parents');
-var Requests = require('../models/requests')
-var TestResults = require('../models/test_results')
+var Requests = require('../models/requests');
+var TestResults = require('../models/test_results');
+var SessionReports = require('../models/session_reports');
+var WallPosts = require('../models/wall_posts')
 var configs = require('../config');
 var jwt = require('jsonwebtoken');
 const shortid = require('shortid');
@@ -82,7 +84,7 @@ module.exports = {
           type: 1,
           student_email: req.body.student_email,
           tutor_email: req.user.email
-        })
+        });
         newReq.save((err) => {
           if (err)
             return res.status(400).send('error creating request')
@@ -120,6 +122,88 @@ module.exports = {
       return res.json({'students':tutor.students})
     })
   },
+  addSessionReport: (req, res)=> {
+    if(!req.body.student_email||!req.body.start_time||!req.body.end_time||!req.body.chapter_name||!req.body.homework)
+      return res.status(400).send('please fill all the details');
+    const tutor = req.user;
+    if(!tutor.students.includes(req.body.student_email))
+      return res.status(403).send('not authorized to submit this student\'s data. Assign student first');
+    try{
+      var start_time = new Date(req.body.start_time);
+      var end_time = new Date(req.body.end_time);
+    }catch (e) {
+      return res.status(400).send(e);
+    }
+    if(start_time > end_time)
+      return res.status(400).send('start time cannot be greater than end time');
+    var newSessionReport = new SessionReports({
+      id: 'SESSION-REPORT-' + shortid.generate(),
+      student_email: req.body.student_email,
+      chapter_name: req.body.chapter_name,
+      homework: req.body.homework,
+      start_time: start_time,
+      end_time: end_time
+    });
+
+    newSessionReport.save((err)=>{
+      if(err)
+        return res.status(400).send(err)
+      Parents.findOne({student: req.body.student_email},(err,parent)=>{
+        if (parent && parent.fcm_token){
+          sendNotif.send('Session Report', 'New session report posted for your child', parent.fcm_token, newSessionReport, (err, resp) => {
+            console.log(resp);
+            console.log(err)
+          });
+        }
+      });
+      Users.findOne({email: req.body.student_email}, (err, student)=>{
+        if(student && student.fcm_token)
+          sendNotif.send('Session Report', 'New session report posted for you', student.fcm_token, newSessionReport, (err, resp) => {
+            console.log(resp);
+            console.log(err);
+          });
+      });
+      res.json(newSessionReport)
+
+    })
+
+  },
+  addStudentWallPost: (req, res)=>{
+    tutor = req.user;
+    if(!req.body.student_email||!req.body.subject||!req.body.comment)
+      return res.status(400).send('please fill all the details');
+    if(!tutor.students.includes(req.body.student_email))
+      return res.status(403).send('not authorized to submit this student\'s data. Assign student first');
+
+    var newWallPost = new WallPosts({
+      id: 'WALL-POST-' + shortid.generate(),
+      student_email: req.body.student_email,
+      subject: req.body.subject,
+      comment: req.body.comment,
+    });
+
+    newWallPost.save((err)=> {
+      if (err)
+        return res.status(400).send(err)
+      Parents.findOne({student: req.body.student_email}, (err, parent) => {
+        if (parent && parent.fcm_token) {
+          sendNotif.send('Wall Post', 'New wall post posted for your child', parent.fcm_token, newWallPost, (err, resp) => {
+            console.log(resp);
+            console.log(err)
+          });
+        }
+      });
+      Users.findOne({email: req.body.student_email}, (err, student) => {
+        if (student && student.fcm_token)
+          sendNotif.send('Wall Post', 'New wall post posted for you', student.fcm_token, newWallPost, (err, resp) => {
+            console.log(resp);
+            console.log(err);
+          });
+      });
+      res.json(newWallPost)
+    })
+
+  },
   submit_test : (req,res)=>{
     if(!req.body.score||!req.body.total||!req.body.retention_rate||!req.body.student_email||!req.body.subject)
     return res.status(400).send('please fill all the details')
@@ -133,7 +217,7 @@ module.exports = {
       total:req.body.total,
       retention_rate:req.body.retention_rate,
       subject: req.body.subject
-    })
+    });
     newTestRes.save((err)=>{
       if(err)
       return res.status(400).send(err)
@@ -250,9 +334,7 @@ module.exports = {
 
       }
     })
-  }
-
-  ,
+  },
   toAuthJSON: (tutor) => {
     return {
       email: user.email,

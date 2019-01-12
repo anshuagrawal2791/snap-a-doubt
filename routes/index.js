@@ -178,6 +178,12 @@ module.exports = (app, passport) => {
   app.post('/auth/schedule-class',(req,res)=>{
     userHandler.scheduleClass(req,res)
   })
+  app.post('/tutor/session-report', verifyTutor, (req, res)=>{
+    tutorHandler.addSessionReport(req, res);
+  })
+  app.post('/tutor/wall-post', verifyTutor, (req, res)=>{
+    tutorHandler.addStudentWallPost(req, res);
+  })
 };
 
 var verifyAdmin = function (req, res, next) {
