@@ -44,6 +44,32 @@ module.exports = (passport) => {
     });
   }
   ));
+  passport.use('parent-or-tutor', new LocalStrategy({
+      usernameField: 'email',
+      passwordField: 'password'
+    },
+    function (username, password, done) {
+      Parents.findOne({ email: username }, function (err, user) {
+        if (err) { return done(err); }
+        if (!user) {
+          Tutors.findOne({email: username},function(err,tutor){
+            if (err) { return done(null, false, { message: err });}
+            if (!tutor) {
+              return done(null, false, { message: 'Neither tutor nor parent' });
+            }
+            else if (password!=tutor.password) {
+              return done(null, false, { message: 'Incorrect password for tutor' });;
+            }
+            else return done(null, tutor);
+          })
+        }
+        else if (!validPassword(password, user)) {
+          return done(null, false, { message: 'Incorrect password for parent' });
+        }
+        else return done(null, user);
+      });
+    }
+  ));
   passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.JWT_KEY

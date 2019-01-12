@@ -184,6 +184,9 @@ module.exports = (app, passport) => {
   app.post('/tutor/wall-post', verifyTutor, (req, res)=>{
     tutorHandler.addStudentWallPost(req, res);
   })
+  app.post('/wall-posts/', passport.authenticate('parent-or-tutor', {session: false}), (req,res)=> {
+    userHandler.getWallPosts(req, res)
+  })
 };
 
 var verifyAdmin = function (req, res, next) {
