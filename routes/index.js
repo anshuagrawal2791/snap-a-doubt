@@ -187,6 +187,9 @@ module.exports = (app, passport) => {
   app.post('/wall-posts/', passport.authenticate('parent-or-tutor', {session: false}), (req,res)=> {
     userHandler.getWallPosts(req, res)
   })
+  app.post('/admin/demo', verifyAdmin,(req,res)=>{
+    demoHandler.bookDemoByAdmin(req, res)
+  })
 };
 
 var verifyAdmin = function (req, res, next) {
@@ -202,7 +205,6 @@ var verifyAdmin = function (req, res, next) {
   }
 };
 var verifyTutor = function(req,res,done){
-  console.log(req.body.email);
   Tutors.findOne({email:req.body.email},function(err,tutor){
     //console.log(tutor);
     if (err) { res.status(403).send('unauthorized'); }

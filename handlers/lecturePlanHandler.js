@@ -30,15 +30,14 @@ module.exports = {
         })
     },
     addLecturePlan: (req, res) => {
-        console.log(req.files)
-
         var lecId = 'LEC-' + shortid.generate()
         var newLec = new LecturePlans({
             id: lecId,
             created_by: req.user.email,
             lecture_name: req.body.lecture_name,
             class: req.body.class,
-            subject: req.body.subject
+            subject: req.body.subject,
+            description: req.body.description
         })
         var image_count = 0
         for (var i = 0; i < NUM_IMAGES; i++) {
@@ -47,7 +46,9 @@ module.exports = {
                 image_count++
             }
         }
-        console.log(image_count)
+        if(image_count < NUM_IMAGES)
+            return res.status(400).send('Upload all images');
+
         for (var i = 0; i < NUM_IMAGES; i++) {
             var cur_image_name = IMAGES[i]
             if (req.files[cur_image_name]) {
@@ -65,7 +66,6 @@ module.exports = {
         final = (image_c,newLec,err)=>{
             if(err)
             return res.status(400).send(err)
-            console.log('image count now is '+image_c)
             if (image_c==0){
                 deleteFolderRecursive.delete(Path, (found) => {
                 });

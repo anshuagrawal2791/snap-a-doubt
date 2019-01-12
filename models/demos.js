@@ -15,8 +15,9 @@ var Demo = new Schema({
     longitude:{type:Number,required:true},
     latitude:{type:Number,required:true},
     accuracy:{type:Number,required:true},
-    meta:{type:String,required:true}
-
+    meta:{type:String,required:true},
+    phone: {type: String},
+    assigned_to: {type: String}
 
 
 });

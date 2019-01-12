@@ -14,6 +14,7 @@ var LecturePlan = new Schema({
   image_exercise:{type:String,required:true},
   image_points:{type:String,required:true},
   created_by : {type:String,required:true},
+  description: {type: String},
   created_at: {
     type: Date,
     default: Date.now
