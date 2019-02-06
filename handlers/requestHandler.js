@@ -26,7 +26,21 @@ module.exports = {
                 return res.status(400).send('invalid request')
             }
         })
-    }
+    },
+    get_requests: (req, res) => {
+        let perPage = 10, page=0;
+        if(req.body.nPerPage)
+            perPage = req.body.nPerPage;
+        if(req.body.page)
+            page = Math.max(page, req.body.page);
+        Requests.find({},{},{skip: perPage*page, limit:perPage*1, sort:{created_at:'desc'}}, (err, requests) => {
+            if (err)
+                return res.status(400).send(err)
+
+            return res.status(400).json({'requests': requests, 'page': page, 'nPerPage':perPage});
+
+        })
+    },
 
 }
 assignStudentToTutor = (req, res, request) => {

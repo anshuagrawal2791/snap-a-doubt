@@ -122,6 +122,9 @@ module.exports = (app, passport) => {
   app.post('/admin/approve',verifyAdmin,(req,res)=>[
     reqHandler.approve(req,res)
   ])
+  app.post('/admin/get_requests',verifyAdmin,(req,res)=>[
+    reqHandler.get_requests(req,res)
+  ])
   app.post('/tutor/get_students',verifyTutor,(req,res)=>{
     tutorHandler.get_students(req,res)
   })
