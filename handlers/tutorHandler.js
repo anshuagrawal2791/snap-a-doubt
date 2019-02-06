@@ -118,8 +118,13 @@ module.exports = {
   get_students : (req,res)=>{
     Tutors.findOne({email:req.user.email},(err,tutor)=>{
       if(err)
-      return res.status(400).send(err)
-      return res.json({'students':tutor.students})
+      return res.status(400).send(err);
+      student_emails = tutor.students;
+      Users.find({email: tutor.students},'name email class',(err, students)=>{
+        if(err)
+          return res.status(400).send(err);
+        return res.json({'students': students});
+      });
     })
   },
   addSessionReport: (req, res)=> {

@@ -39,7 +39,7 @@ app.listen(port, function () {
       tutorHandler.clearReceivedToday();
     }, null, true, 'Asia/Calcutta');
 
-    var job3 = new cronJob('*/10 * * * * *', () => {
+    var job3 = new cronJob('*/5 * * * *', () => {
       userHandler.sendClassNotifications();
     }, null, true, 'Asia/Calcutta');
   }else{
