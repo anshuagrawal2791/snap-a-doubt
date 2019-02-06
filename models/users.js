@@ -10,30 +10,39 @@ const rand = require('csprng');
 var crypto = require('crypto');
 
 var User = new Schema({
-  phone_number: String,
-  email: { type: String, unique: true, index: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'] },
-  password: { type: String, required: true },
-  salt: String,
-  name: String,
-  class: { type: Number, min: 1, max: 13 },
-  school: String,
-  city: String,
-  parent_name: String,
-  alternate_phone_number: String,
-  pin_code: Number,
-  address: String,
-  created_at: {
-    type: Date,
-    default: Date.now
-  },
-  feedbacks:{type:[String]},
-  referral_code: String,
-  points: {type: Number, default: 0},
-  fcm_token: {type: String, required: true},
-  modified_at: Date,
-  image: { type: String, default: 'http://static.bleacherreport.net/images/redesign/avatars/default-user-icon-profile.png' }, // TODO update this
-  doubts: { type: [String] }, // store the ids of questions
-  verified: { type: Boolean, default: false }
+    phone_number: String,
+    email: {
+        type: String,
+        unique: true,
+        index: true,
+        required: [true, "can't be blank"],
+        match: [/\S+@\S+\.\S+/, 'is invalid']
+    },
+    password: {type: String, required: true},
+    salt: String,
+    name: String,
+    class: {type: Number, min: 1, max: 13},
+    school: String,
+    city: String,
+    parent_name: String,
+    alternate_phone_number: String,
+    pin_code: Number,
+    address: String,
+    created_at: {
+        type: Date,
+        default: Date.now
+    },
+    feedbacks: {type: [String]},
+    referral_code: String,
+    points: {type: Number, default: 0},
+    fcm_token: {type: String, required: true},
+    modified_at: Date,
+    image: {
+        type: String,
+        default: 'http://static.bleacherreport.net/images/redesign/avatars/default-user-icon-profile.png'
+    }, // TODO update this
+    doubts: {type: [String]}, // store the ids of questions
+    verified: {type: Boolean, default: false}
 });
 
 // Middlewares
