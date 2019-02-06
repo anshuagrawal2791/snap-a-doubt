@@ -6,6 +6,7 @@ var TestResults = require('../models/test_results');
 var SessionReports = require('../models/session_reports');
 var WallPosts = require('../models/wall_posts');
 var StudentProgresses = require('../models/student_progresses');
+var ChapterProgresses = require('../models/chapter_progresses');
 var configs = require('../config');
 var jwt = require('jsonwebtoken');
 const shortid = require('shortid');
@@ -250,6 +251,85 @@ module.exports = {
             });
             res.json(newStudentProgress)
         })
+
+    },
+    addChapterProgress: (req, res)=>{
+        tutor = req.user;
+        if (!req.body.student_email || !req.body.subject || !req.body.lecture_count || !req.body.chapter_name || !req.body.test_count)
+            return res.status(400).send('please fill all the details');
+        if (!tutor.students.includes(req.body.student_email))
+            return res.status(403).send('not authorized to submit this student\'s data. Assign student first');
+
+        var newChapterProgress = new ChapterProgresses({
+            id: 'CHAP-PROG-' + shortid.generate(),
+            student_email: req.body.student_email,
+            subject: req.body.subject,
+            lecture_count: req.body.lecture_count,
+            test_count: req.body.test_count,
+            chapter_name: req.body.chapter_name
+        });
+
+        ChapterProgresses.findOne({
+            student_email: req.body.student_email,
+            subject: req.body.subject,
+            chapter_name: req.body.chapter_name
+        }, (err, progress) => {
+            if(err)
+                return res.status(400).send(err);
+            if(progress)
+                return res.status(400).send('Chapter progress already exists for this user');
+
+
+            newChapterProgress.save((err) => {
+                if (err)
+                    return res.status(400).send(err)
+                Parents.findOne({student: req.body.student_email}, (err, parent) => {
+                    if (parent && parent.fcm_token) {
+                        sendNotif.send('Chapter Progress', 'New progress posted for your child', parent.fcm_token, newChapterProgress, (err, resp) => {
+                            console.log(resp);
+                            console.log(err)
+                        });
+                    }
+                });
+                Users.findOne({email: req.body.student_email}, (err, student) => {
+                    if (student && student.fcm_token)
+                        sendNotif.send('Chapter Progress', 'New progress posted for you', student.fcm_token, newChapterProgress, (err, resp) => {
+                            console.log(resp);
+                            console.log(err);
+                        });
+                });
+                res.json(newChapterProgress)
+            });
+
+        });
+
+
+
+    },
+    updateChapterProgress: (req, res)=>{
+        tutor = req.user;
+        if (!req.body.student_email || !req.body.subject || !req.body.lecture_count || !req.body.chapter_name || !req.body.test_count)
+            return res.status(400).send('please fill all the details');
+        if (!tutor.students.includes(req.body.student_email))
+            return res.status(403).send('not authorized to submit this student\'s data. Assign student first');
+
+        ChapterProgresses.findOne({
+            student_email: req.body.student_email,
+            subject: req.body.subject,
+            chapter_name: req.body.chapter_name
+        }, (err, progress) => {
+            if(err)
+                return res.status(400).send(err);
+            if(!progress)
+                return res.status(404).send('Matching entry does not exist');
+            progress.lecture_count = req.body.lecture_count;
+            progress.test_count = req.body.test_count;
+            progress.save((err)=>{
+                if(err)
+                    return res.status(400).send(err);
+                return res.json(progress);
+            });
+        });
 
     },
     submit_test: (req, res) => {

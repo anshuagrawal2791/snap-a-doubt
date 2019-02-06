@@ -194,11 +194,20 @@ module.exports = (app, passport) => {
     app.post('/tutor/add_student_progress', verifyTutor, (req, res) => {
         tutorHandler.addStudentProgress(req, res);
     })
+    app.post('/tutor/add_chapter_progress', verifyTutor, (req, res) => {
+        tutorHandler.addChapterProgress(req, res);
+    })
+    app.post('/tutor/update_chapter_progress', verifyTutor, (req, res) => {
+        tutorHandler.updateChapterProgress(req, res);
+    })
     app.post('/wall-posts/', passport.authenticate('parent-or-tutor', {session: false}), (req, res) => {
         userHandler.getWallPosts(req, res)
     })
     app.post('/get_student_progresses/', passport.authenticate('parent-or-tutor', {session: false}), (req, res) => {
         userHandler.getStudentProgresses(req, res)
+    })
+    app.post('/get_chapter_progresses/', passport.authenticate('parent-or-tutor', {session: false}), (req, res) => {
+        userHandler.getChapterProgresses(req, res)
     })
     app.post('/admin/demo', verifyAdmin, (req, res) => {
         demoHandler.bookDemoByAdmin(req, res)

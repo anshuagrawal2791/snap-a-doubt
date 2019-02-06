@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var configs = require('../config');
-var StudentProgress = new Schema({
+var ChapterProgress = new Schema({
     id: {type: String, index: true,required:true},
     student_email:{type:String,index:true,required:true},
     chapter_name:{type:String,required:true},
@@ -14,4 +14,4 @@ var StudentProgress = new Schema({
     },
 });
 
-module.exports = mongoose.model('StudentProgress', StudentProgress);
+module.exports = mongoose.model('ChapterProgress', ChapterProgress);

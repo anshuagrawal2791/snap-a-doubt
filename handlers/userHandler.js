@@ -6,6 +6,7 @@ var Doubts = require('../models/doubts');
 var Classes = require('../models/classes');
 var WallPosts = require('../models/wall_posts');
 var StudentProgresses = require('../models/student_progresses');
+var ChapterProgresses = require('../models/chapter_progresses');
 const shortid = require('shortid');
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@');
 const mailer = require('../utils/mailer');
@@ -219,6 +220,20 @@ module.exports = {
                 return res.status(200).json({'progresses': progresses});
             });
     },
+    getChapterProgresses: (req, res) => {
+            if (!req.body.student_email)
+                return res.status(400).send('student email is required');
+            if (req.user.students && !req.user.students.includes(req.body.student_email))
+                return res.status(403).send('not authorized to get this student\'s data. Assign student first');
+            else if (req.user.student && req.user.student !== req.body.student_email)
+                return res.status(403).send('not authorized to get this student\'s data. Assign student first');
+            else
+                ChapterProgresses.find({student_email: req.body.student_email}, (err, progresses) => {
+                    if (err)
+                        return res.status(400).send(err)
+                    return res.status(200).json({'progresses': progresses});
+                });
+        },
 
     sendClassNotifications: () => {
         console.log('sending class notifications')
